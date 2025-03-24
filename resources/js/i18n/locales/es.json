@@ -1,0 +1,296 @@
+{
+  "common": {
+    "welcome": "¡Hola, {name}!",
+    "notifications": "Ver notificaciones",
+    "viewProfile": "Ver perfil",
+    "settings": "Configuración",
+    "signOut": "Cerrar sesión",
+    "search": "Buscar",
+    "openSidebar": "Abrir menú lateral",
+    "closeSidebar": "Cerrar menú lateral"
+  },
+  "navigation": {
+    "dashboard": "Panel Principal",
+    "trainingLibrary": "Biblioteca de Entrenamiento",
+    "testing": "Evaluaciones",
+    "reports": "Reportes"
+  },
+  "dashboard": {
+    "activeTest": {
+      "title": "Test Activo",
+      "practiceMode": "Modo Práctica",
+      "certificationMode": "Modo Certificación",
+      "bestScore": "Mejor Puntuación",
+      "attempts": "Intentos",
+      "lastAttempt": "Último: {date}",
+      "average": "Promedio",
+      "allAttempts": "Todos los intentos",
+      "averageTime": "Tiempo Promedio",
+      "perAttempt": "Por intento",
+      "startTest": "Iniciar Test",
+      "history": "Historial de Intentos",
+      "viewDetails": "Ver detalles",
+      "viewStatistics": "Ver estadísticas detalladas",
+      "attemptNumber": "Intento {number}",
+      "time": "Tiempo",
+      "score": "Puntuación",
+      "minutes": "{minutes} minutos"
+    },
+    "popularTests": {
+      "title": "Tests Populares",
+      "viewMeasureUp": "Ver en MeasureUp",
+      "students": "{count} estudiantes",
+      "details": "Ver detalles",
+      "rating": "Valoración",
+      "price": "${price}"
+    },
+    "statistics": {
+      "title": "Estadísticas",
+      "testsCompleted": "Tests completados",
+      "avgScore": "Puntuación promedio",
+      "studyHours": "Horas de estudio",
+      "weeklyProgress": "Progreso semanal",
+      "viewDetails": "Ver detalles"
+    },
+    "calendar": {
+      "title": "Calendario",
+      "upcomingTests": "Próximos Tests",
+      "viewAll": "Ver todos",
+      "days": {
+        "sun": "Dom",
+        "mon": "Lun",
+        "tue": "Mar",
+        "wed": "Mié",
+        "thu": "Jue",
+        "fri": "Vie",
+        "sat": "Sáb"
+      }
+    },
+    "upcomingTests": {
+      "title": "Próximos Tests",
+      "viewAll": "Ver todos",
+      "practice": "Práctica",
+      "certification": "Certificación",
+      "date": "Fecha",
+      "time": "Hora"
+    }
+  },
+  "tests": {
+    "AZ-900": {
+      "title": "Fundamentos de Microsoft Azure (AZ-900)",
+      "description": "Evaluación de conocimientos fundamentales de Microsoft Azure, incluyendo conceptos de nube, servicios principales y aspectos de seguridad."
+    },
+    "SAA-C03": {
+      "title": "Arquitecto de Soluciones AWS",
+      "description": "Evaluación completa de habilidades de arquitectura AWS y mejores prácticas para soluciones en la nube."
+    },
+    "SY0-601": {
+      "title": "CompTIA Security+",
+      "description": "Certificación esencial de ciberseguridad que cubre seguridad de redes, cumplimiento normativo y operaciones."
+    },
+    "Docker": {
+      "title": "Fundamentos de Docker",
+      "description": "Aprende los fundamentos de la containerización y las mejores prácticas de Docker."
+    },
+    "Kubernetes": {
+      "title": "Administración de Kubernetes",
+      "description": "Domina la orquestación de contenedores con Kubernetes."
+    },
+    "Linux": {
+      "title": "Administración de Linux",
+      "description": "Habilidades esenciales de administración de sistemas Linux y línea de comandos."
+    }
+  },
+  "reports": {
+    "title": "Reportes",
+    "subtitle": "Sigue tu progreso y rendimiento en todos los tests",
+    "metrics": {
+      "totalTests": "Tests Totales",
+      "avgScore": "Puntuación Media",
+      "studyHours": "Horas de Estudio",
+      "certifications": "Certificaciones",
+      "vsLastMonth": "vs mes anterior"
+    },
+    "charts": {
+      "certificationPerformance": "Rendimiento por Certificación",
+      "weeklyActivity": "Actividad Semanal",
+      "viewDetails": "Ver Detalles",
+      "days": {
+        "mon": "Lun",
+        "tue": "Mar",
+        "wed": "Mié",
+        "thu": "Jue",
+        "fri": "Vie",
+        "sat": "Sáb",
+        "sun": "Dom"
+      }
+    },
+    "recommendations": {
+      "title": "Recomendaciones",
+      "takeAction": "Tomar Acción",
+      "items": {
+        "weakAreas": {
+          "title": "Enfócate en Áreas Débiles",
+          "description": "Repasa y practica preguntas de tus objetivos más débiles"
+        },
+        "nextCertification": {
+          "title": "Siguiente Certificación",
+          "description": "Estás listo para tomar el siguiente examen de certificación"
+        },
+        "studyGroup": {
+          "title": "Únete a un Grupo de Estudio",
+          "description": "Conéctate con otros que se preparan para la misma certificación"
+        }
+      }
+    },
+    "test": {
+      "title": "Reportes de Test",
+      "download": "Descargar Reporte",
+      "tabs": {
+        "attempts": "Intentos",
+        "objectives": "Objetivos",
+        "calendar": "Calendario",
+        "questions": "Preguntas"
+      },
+      "attempts": {
+        "lastAttempt": "Último Intento",
+        "history": "Historial de Intentos",
+        "date": "Fecha",
+        "mode": "Modo",
+        "score": "Puntuación",
+        "duration": "Duración",
+        "details": "Detalles del Intento",
+        "questions": "Preguntas",
+        "correct": "Correctas",
+        "incorrect": "Incorrectas"
+      },
+      "objectives": {
+        "mastered": "Dominados",
+        "improving": "Mejorando",
+        "needsImprovement": "Necesita Mejora",
+        "description": "Descripción",
+        "questions": "Preguntas",
+        "correct": "Correctas",
+        "incorrect": "Incorrectas"
+      },
+      "calendar": {
+        "title": "Calendario de Actividad",
+        "days": {
+          "sun": "Dom",
+          "mon": "Lun",
+          "tue": "Mar",
+          "wed": "Mié",
+          "thu": "Jue",
+          "fri": "Vie",
+          "sat": "Sáb"
+        },
+        "certification": "Certificación",
+        "practice": "Práctica",
+        "score": "Puntuación",
+        "duration": "Duración",
+        "questions": "Preguntas",
+        "correctAnswers": "Respuestas Correctas",
+        "incorrectAnswers": "Respuestas Incorrectas",
+        "objectives": "Objetivos",
+        "time": "Hora"
+      },
+      "questions": {
+        "filters": {
+          "all": "Todas las Preguntas",
+          "correct": "Correctas",
+          "incorrect": "Incorrectas",
+          "notAttempted": "No Intentadas"
+        },
+        "attempts": "Intentos",
+        "details": "Detalles de la Pregunta",
+        "question": "Pregunta",
+        "objective": "Objetivo",
+        "options": "Opciones",
+        "explanation": "Explicación",
+        "attemptHistory": "Historial de Intentos",
+        "correct": "Correcta",
+        "incorrect": "Incorrecta"
+      },
+      "launch": {
+        "title": "Lanzar Test",
+        "mode": "Modo de Test",
+        "practiceMode": "Modo Práctica",
+        "certificationMode": "Modo Certificación",
+        "questionOptions": "Opciones de Preguntas",
+        "failedQuestions": "Incluir Preguntas Fallidas",
+        "notAttempted": "Incluir Preguntas No Intentadas",
+        "objectives": "Seleccionar Objetivos",
+        "start": "Iniciar Test"
+      }
+    }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "view": "Ver notificaciones",
+    "all": "Todas",
+    "unread": "No leídas",
+    "tests": "Tests",
+    "achievements": "Logros",
+    "markAllRead": "Marcar todas como leídas",
+    "clearAll": "Eliminar todas",
+    "showing": "Mostrando {count} notificaciones",
+    "noNotifications": "No hay notificaciones",
+    "markAsRead": "Marcar como leída",
+    "delete": "Eliminar",
+    "newTestAvailable": "Nuevo test disponible",
+    "newTestMessage": "Un nuevo test para {test} está disponible",
+    "achievementUnlocked": "¡Logro desbloqueado!",
+    "achievementMessage": "¡Felicitaciones! Has desbloqueado el logro {achievement}",
+    "testReminder": "Recordatorio de test",
+    "testReminderMessage": "No olvides tu próximo test para {test} el {date}",
+    "systemUpdate": "Actualización del sistema",
+    "systemUpdateMessage": "La plataforma ha sido actualizada con nuevas características y mejoras"
+  },
+  "training": {
+    "title": "Biblioteca de Entrenamiento",
+    "subtitle": "Explora y accede a todos los recursos de entrenamiento disponibles",
+    "searchPlaceholder": "Buscar tests, certificaciones...",
+    "summary": "Resumen",
+    "tests": "tests",
+    "noResults": {
+      "title": "No se encontraron resultados",
+      "description": "No hay tests que coincidan con los filtros seleccionados."
+    },
+    "progress": "Progreso",
+    "questions": "Preguntas",
+    "level": "Nivel",
+    "profile": "Perfil",
+    "technologies": "Tecnologías",
+    "skills": "Habilidades",
+    "lastAccess": "Último acceso",
+    "includesCertification": "Incluye certificación",
+    "start": "Iniciar",
+    "activate": "Activar",
+    "tryDemo": "Versión Demo",
+    "status": {
+      "active": "Activos",
+      "inactive": "Inactivos",
+      "locked": "Bloqueados"
+    },
+    "type": {
+      "practice": "Prácticas",
+      "elearning": "Cursos en línea",
+      "assessment": "Evaluaciones",
+      "certkit": "Kits de Certificación"
+    },
+    "difficulty": {
+      "beginner": "Principiante",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzado"
+    },
+    "filters": {
+      "title": "Filtros",
+      "searchPlaceholder": "Buscar tests...",
+      "status": "Estado",
+      "type": "Tipo",
+      "difficulty": "Dificultad",
+      "clear": "Limpiar",
+      "apply": "Aplicar"
+    }
+  }
+} 

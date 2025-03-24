@@ -1,0 +1,295 @@
+{
+  "common": {
+    "welcome": "Hello, {name}!",
+    "notifications": "View notifications",
+    "viewProfile": "View profile",
+    "settings": "Settings",
+    "signOut": "Sign out",
+    "search": "Search",
+    "openSidebar": "Open sidebar",
+    "closeSidebar": "Close sidebar"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "trainingLibrary": "Training Library",
+    "testing": "Testing",
+    "reports": "Reports"
+  },
+  "dashboard": {
+    "activeTest": {
+      "title": "Active Test",
+      "practiceMode": "Practice Mode",
+      "certificationMode": "Certification Mode",
+      "bestScore": "Best Score",
+      "attempts": "Attempts",
+      "lastAttempt": "Last: {date}",
+      "average": "Average",
+      "allAttempts": "All attempts",
+      "averageTime": "Average Time",
+      "perAttempt": "Per attempt",
+      "startTest": "Start Test",
+      "history": "Attempt History",
+      "viewDetails": "View details",
+      "viewStatistics": "View detailed statistics",
+      "attemptNumber": "Attempt {number}",
+      "time": "Time",
+      "score": "Score",
+      "minutes": "{minutes} minutes"
+    },
+    "popularTests": {
+      "title": "Popular Tests",
+      "viewMeasureUp": "View on MeasureUp",
+      "students": "{count} students",
+      "details": "View details",
+      "rating": "Rating",
+      "price": "${price}"
+    },
+    "statistics": {
+      "title": "Statistics",
+      "testsCompleted": "Tests completed",
+      "avgScore": "Average score",
+      "studyHours": "Study hours",
+      "weeklyProgress": "Weekly progress",
+      "viewDetails": "View details"
+    },
+    "calendar": {
+      "title": "Calendar",
+      "upcomingTests": "Upcoming Tests",
+      "viewAll": "View all",
+      "days": {
+        "sun": "Sun",
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat"
+      }
+    },
+    "upcomingTests": {
+      "title": "Upcoming Tests",
+      "viewAll": "View all",
+      "practice": "Practice",
+      "certification": "Certification",
+      "date": "Date",
+      "time": "Time"
+    }
+  },
+  "tests": {
+    "AZ-900": {
+      "title": "Microsoft Azure Fundamentals",
+      "description": "Assessment of fundamental Microsoft Azure knowledge, including cloud concepts and security aspects."
+    },
+    "SAA-C03": {
+      "title": "AWS Solutions Architect",
+      "description": "Comprehensive evaluation of AWS architecture skills and best practices for cloud solutions."
+    },
+    "SY0-601": {
+      "title": "CompTIA Security+",
+      "description": "Essential cybersecurity certification covering network security, compliance, and operations."
+    },
+    "Docker": {
+      "title": "Docker Fundamentals",
+      "description": "Learn containerization fundamentals and Docker best practices."
+    },
+    "Kubernetes": {
+      "title": "Kubernetes Administration",
+      "description": "Master container orchestration with Kubernetes."
+    },
+    "Linux": {
+      "title": "Linux Administration",
+      "description": "Essential Linux system administration and command line skills."
+    }
+  },
+  "reports": {
+    "title": "Reports",
+    "subtitle": "Track your progress and performance across all tests",
+    "metrics": {
+      "totalTests": "Total Tests",
+      "avgScore": "Average Score",
+      "studyHours": "Study Hours",
+      "certifications": "Certifications",
+      "vsLastMonth": "vs last month"
+    },
+    "charts": {
+      "certificationPerformance": "Certification Performance",
+      "weeklyActivity": "Weekly Activity",
+      "viewDetails": "View Details",
+      "days": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
+      }
+    },
+    "recommendations": {
+      "title": "Recommendations",
+      "takeAction": "Take Action",
+      "items": {
+        "weakAreas": {
+          "title": "Focus on Weak Areas",
+          "description": "Review and practice questions from your weakest objectives"
+        },
+        "nextCertification": {
+          "title": "Next Certification",
+          "description": "You're ready to take the next certification exam"
+        },
+        "studyGroup": {
+          "title": "Join Study Group",
+          "description": "Connect with others preparing for the same certification"
+        }
+      }
+    },
+    "test": {
+      "title": "Test Reports",
+      "download": "Download Report",
+      "tabs": {
+        "attempts": "Attempts",
+        "objectives": "Objectives",
+        "calendar": "Calendar",
+        "questions": "Questions"
+      },
+      "attempts": {
+        "lastAttempt": "Last Attempt",
+        "history": "Attempt History",
+        "date": "Date",
+        "mode": "Mode",
+        "score": "Score",
+        "duration": "Duration",
+        "details": "Attempt Details",
+        "questions": "Questions",
+        "correct": "Correct",
+        "incorrect": "Incorrect"
+      },
+      "objectives": {
+        "mastered": "Mastered",
+        "improving": "Improving",
+        "needsImprovement": "Needs Improvement",
+        "description": "Description",
+        "questions": "Questions",
+        "correct": "Correct",
+        "incorrect": "Incorrect"
+      },
+      "calendar": {
+        "title": "Activity Calendar",
+        "days": {
+          "sun": "Sun",
+          "mon": "Mon",
+          "tue": "Tue",
+          "wed": "Wed",
+          "thu": "Thu",
+          "fri": "Fri",
+          "sat": "Sat"
+        },
+        "certification": "Certification",
+        "practice": "Practice",
+        "score": "Score",
+        "duration": "Duration",
+        "questions": "Questions",
+        "correctAnswers": "Correct Answers",
+        "incorrectAnswers": "Incorrect Answers",
+        "objectives": "Objectives",
+        "time": "Time"
+      },
+      "questions": {
+        "filters": {
+          "all": "All Questions",
+          "correct": "Correct",
+          "incorrect": "Incorrect",
+          "notAttempted": "Not Attempted"
+        },
+        "attempts": "Attempts",
+        "details": "Question Details",
+        "question": "Question",
+        "objective": "Objective",
+        "options": "Options",
+        "explanation": "Explanation",
+        "attemptHistory": "Attempt History",
+        "correct": "Correct",
+        "incorrect": "Incorrect"
+      },
+      "launch": {
+        "title": "Launch Test",
+        "mode": "Test Mode",
+        "practiceMode": "Practice Mode",
+        "certificationMode": "Certification Mode",
+        "questionOptions": "Question Options",
+        "failedQuestions": "Include Failed Questions",
+        "notAttempted": "Include Not Attempted Questions",
+        "objectives": "Select Objectives",
+        "start": "Start Test"
+      }
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "view": "View notifications",
+    "all": "All",
+    "unread": "Unread",
+    "tests": "Tests",
+    "achievements": "Achievements",
+    "markAllRead": "Mark all as read",
+    "clearAll": "Clear all",
+    "noNotifications": "No notifications",
+    "showing": "Showing {count} notifications",
+    "viewAll": "View all",
+    "newTestAvailable": "New Test Available",
+    "newTestMessage": "A new test for {test} is now available",
+    "achievementUnlocked": "Achievement Unlocked!",
+    "achievementMessage": "Congratulations! You've unlocked the {achievement} achievement",
+    "testReminder": "Test Reminder",
+    "testReminderMessage": "Don't forget your upcoming test for {test} on {date}",
+    "systemUpdate": "System Update",
+    "systemUpdateMessage": "The platform has been updated with new features and improvements"
+  },
+  "training": {
+    "title": "Training Library",
+    "subtitle": "Explore and access all available training resources",
+    "searchPlaceholder": "Search tests, certifications...",
+    "summary": "Summary",
+    "tests": "tests",
+    "noResults": {
+      "title": "No results found",
+      "description": "No tests match the selected filters."
+    },
+    "progress": "Progress",
+    "questions": "Questions",
+    "level": "Level",
+    "profile": "Profile",
+    "technologies": "Technologies",
+    "skills": "Skills",
+    "lastAccess": "Last Access",
+    "includesCertification": "Includes Certification",
+    "start": "Start",
+    "activate": "Activate",
+    "tryDemo": "Try Demo",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "locked": "Locked"
+    },
+    "type": {
+      "practice": "Practice Tests",
+      "elearning": "Online Courses",
+      "assessment": "Assessments",
+      "certkit": "Certification Kits"
+    },
+    "difficulty": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "filters": {
+      "title": "Filters",
+      "searchPlaceholder": "Search tests...",
+      "status": "Status",
+      "type": "Type",
+      "difficulty": "Difficulty",
+      "clear": "Clear",
+      "apply": "Apply"
+    }
+  }
+} 
