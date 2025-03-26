@@ -7,7 +7,8 @@
     "signOut": "Cerrar sesión",
     "search": "Buscar",
     "openSidebar": "Abrir menú lateral",
-    "closeSidebar": "Cerrar menú lateral"
+    "closeSidebar": "Cerrar menú lateral",
+    "close": "Cerrar"
   },
   "navigation": {
     "dashboard": "Panel Principal",
@@ -44,6 +45,11 @@
       "rating": "Valoración",
       "price": "${price}"
     },
+    "badges": {
+      "title": "Certificaciones",
+      "viewAll": "Ver todas",
+      "viewBadge": "Ver certificación"
+    },
     "statistics": {
       "title": "Estadísticas",
       "testsCompleted": "Tests completados",
@@ -56,6 +62,9 @@
       "title": "Calendario",
       "upcomingTests": "Próximos Tests",
       "viewAll": "Ver todos",
+      "noAttempts": "No hay intentos en esta fecha",
+      "time": "Hora",
+      "duration": "Duración",
       "days": {
         "sun": "Dom",
         "mon": "Lun",

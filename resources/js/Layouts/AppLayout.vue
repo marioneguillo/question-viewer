@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen bg-gray-50">
+    <div class="min-h-screen bg-gray-100">
         <!-- Sidebar para móvil -->
         <TransitionRoot as="template" :show="sidebarOpen">
             <Dialog as="div" class="relative z-50 lg:hidden" @close="sidebarOpen = false">
@@ -40,12 +40,23 @@
         </TransitionRoot>
 
         <!-- Sidebar para desktop -->
-        <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-            <Sidebar :navigation="navigation" :is-mobile="false" />
+        <div 
+          class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col transition-all duration-300"
+          :class="isSidebarCollapsed ? 'lg:w-16' : 'lg:w-72'"
+        >
+            <Sidebar 
+              :navigation="navigation" 
+              :is-mobile="false"
+              :is-collapsed="isSidebarCollapsed"
+              @toggle-collapse="toggleCollapse"
+            />
         </div>
 
         <!-- Contenido principal -->
-        <div class="lg:pl-72">
+        <div 
+          class="flex flex-col min-h-screen transition-all duration-300"
+          :class="{ 'lg:pl-72': !isSidebarCollapsed, 'lg:pl-16': isSidebarCollapsed }"
+        >
             <!-- Header superior -->
             <div class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
                 <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" @click="sidebarOpen = true">
@@ -172,13 +183,15 @@ import { usePage } from '@inertiajs/vue3'
 import LanguageSelector from '@/Components/LanguageSelector.vue'
 import { useTranslation } from '@/composables/useTranslation'
 import NotificationCenter from '@/Components/Notifications/NotificationCenter.vue'
+import { useSidebar } from '@/composables/useSidebar'
 
 // Estado para controlar la apertura/cierre del sidebar en móvil
 const sidebarOpen = ref(false)
 const page = usePage()
 
-// Inicializar useTranslation
+// Inicializar useTranslation y useSidebar
 const { t } = useTranslation()
+const { isSidebarCollapsed, toggleSidebar } = useSidebar()
 
 // Configuración de la navegación
 const navigation = computed(() => [
@@ -207,4 +220,9 @@ const navigation = computed(() => [
         current: page.url === '/reports' 
     }
 ])
+
+// Función para alternar el estado colapsado del sidebar
+const toggleCollapse = () => {
+    toggleSidebar()
+}
 </script> 
