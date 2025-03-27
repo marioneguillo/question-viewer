@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TrainingLibraryController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TestingController;
+use App\Http\Controllers\BadgeController;
 use Inertia\Inertia;
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -34,3 +35,5 @@ use Inertia\Inertia;
     Route::get('/notifications', function () {
         return Inertia::render('Notifications/Index');
     })->name('notifications.index');
+
+    Route::get('/badges', [BadgeController::class, 'index'])->name('badges.index');

@@ -14,7 +14,8 @@
     "dashboard": "Dashboard",
     "trainingLibrary": "Training Library",
     "testing": "Testing",
-    "reports": "Reports"
+    "reports": "Reports",
+    "badges": "Badges"
   },
   "dashboard": {
     "activeTest": {
@@ -35,7 +36,14 @@
       "attemptNumber": "Attempt {number}",
       "time": "Time",
       "score": "Score",
-      "minutes": "{minutes} minutes"
+      "minutes": "{minutes} minutes",
+      "changeTest": "Change Test",
+      "change": "Change",
+      "selectTest": "Select Test",
+      "select": "Select",
+      "searchTests": "Search Tests",
+      "searchPlaceholder": "Search Tests...",
+      "noResults": "No results found"
     },
     "popularTests": {
       "title": "Popular Tests",
@@ -48,7 +56,8 @@
     "badges": {
       "title": "Certifications",
       "viewAll": "View all",
-      "viewBadge": "View certification"
+      "viewBadge": "View certification",
+      "progress": "Progress"
     },
     "statistics": {
       "title": "Statistics",
@@ -82,7 +91,17 @@
       "certification": "Certification",
       "date": "Date",
       "time": "Time"
-    }
+    },
+    "productRegistration": {
+      "title": "Product Code Registration",
+      "code": "Code",
+      "codePlaceholder": "Enter the code",
+      "acceptTerms": "I accept the terms and conditions",
+      "readTerms": "Read terms",
+      "register": "Register",
+      "termsTitle": "Terms and Conditions",
+      "termsContent": "By registering this code, you agree to:\n\n1. The code is valid and has not been used previously.\n2. You can only use the code once.\n3. The access to the test is personal and not transferable.\n4. You must complete the test within the time limit.\n5. It is not allowed to share or distribute the code.\n\nBy clicking 'Register', you confirm that you have read and accepted these terms."
+  }
   },
   "tests": {
     "AZ-900": {
@@ -300,5 +319,41 @@
       "clear": "Clear",
       "apply": "Apply"
     }
-  }
+  },
+    "badges": {
+      "title": "Badges",
+      "subtitle": "Manage and view your achievements and progress",
+      "totalBadges": "Total Badges",
+      "earned": "earned",
+      "progress": "Progress",
+      "description": "Description",
+      "status": "Status",
+      "unlocked": "Unlocked",
+      "locked": "Locked",
+      "progressText": "Progress",
+      "unlockDate": "Unlock Date",
+      "requirements": "Requirements",
+      "viewDetails": "View Details",
+      "earnBadge": "Earn Badge",
+      "earnedBadges": "Earned Badges",
+      "remainingBadges": "Remaining Badges",
+      "completionRate": "Completion Rate",
+      "lastEarned": "Last Earned",
+      "nextBadge": "Next Badge",
+      "achievement": "Achievement",
+      "milestone": "Milestone",
+      "reward": "Reward",
+      "challenge": "Challenge",
+      "skill": "Skill",
+      "level": "Level",
+      "points": "Points",
+      "experience": "Experience",
+      "rank": "Rank",
+      "category": "Category",
+      "type": "Type",
+      "rarity": "Rarity",
+      "difficulty": "Difficulty",
+      "time": "Time",
+      "date": "Date"
+    }
 } 

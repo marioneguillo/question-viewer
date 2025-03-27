@@ -7,126 +7,10 @@
       </div>
 
       <!-- Panel de Test Activo -->
-      <div class="bg-gradient-to-b from-gray-50 to-white rounded-2xl p-8 border border-gray-100">
-        <div class="max-w-7xl mx-auto">
-          <!-- Test Activo -->
-          <div v-if="activeTest" class="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <!-- Encabezado con degradado -->
-            <div class="relative h-24 bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center px-8">
-              <div class="absolute inset-0 bg-black/10"></div>
-              <div class="relative z-10 flex items-center justify-between w-full">
-                <div class="flex items-center gap-4">
-                  <div class="p-3 bg-white/10 backdrop-blur-sm rounded-lg">
-                    <component :is="getCertificationIcon(activeTest.certification)" 
-                              class="w-8 h-8 text-white" />
-                  </div>
-                  <div>
-                    <h3 class="text-lg font-medium text-white">{{ activeTest.certification }}</h3>
-                    <div :class="[
-                      'text-sm inline-flex items-center gap-1 px-2 py-0.5 rounded-full',
-                      activeTest.mode === 'practice' 
-                        ? 'bg-green-500/20 text-green-100' 
-                        : 'bg-yellow-500/20 text-yellow-100'
-                    ]">
-                      <div class="w-1.5 h-1.5 rounded-full" 
-                           :class="activeTest.mode === 'practice' ? 'bg-green-400' : 'bg-yellow-400'" />
-                      {{ activeTest.mode === 'practice' ? t('dashboard.activeTest.practiceMode') : t('dashboard.activeTest.certificationMode') }}
-                    </div>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <div class="text-3xl font-bold text-white">{{ activeTest.bestScore }}%</div>
-                  <div class="text-sm text-white/80">{{ t('dashboard.activeTest.bestScore') }}</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Contenido principal -->
-            <div class="p-8">
-              <!-- Descripción y Botón de Inicio -->
-              <div class="flex items-start justify-between gap-8 mb-8">
-                <p class="text-gray-600 flex-1">{{ activeTest.description }}</p>
-                <Link
-                  href="/questions/start-all"
-                  class="flex-shrink-0 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 flex items-center gap-2 shadow-sm group"
-                >
-                  <PlayIcon class="w-5 h-5 group-hover:scale-110 transition-transform" />
-                  {{ t('dashboard.activeTest.startTest') }}
-                </Link>
-              </div>  
-
-              <!-- Métricas en cards -->
-              <div class="grid grid-cols-3 gap-4 mb-8">
-                <!-- Total de intentos -->
-                <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <div class="flex items-center justify-between mb-3">
-                    <div class="text-sm font-medium text-gray-600">{{ t('dashboard.activeTest.attempts') }}</div>
-                    <ChartBarIcon class="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div class="text-lg font-semibold text-gray-900">{{ activeTest.attempts }}</div>
-                  <div class="text-sm text-gray-500 mt-1">{{ t('dashboard.activeTest.lastAttempt', { date: activeTest.lastAttemptDate }) }}</div>
-                </div>
-
-                <!-- Puntuación media -->
-                <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <div class="flex items-center justify-between mb-3">
-                    <div class="text-sm font-medium text-gray-600">{{ t('dashboard.activeTest.average') }}</div>
-                    <QuestionMarkCircleIcon class="w-5 h-5 text-green-600" />
-                  </div>
-                  <div class="text-lg font-semibold text-gray-900">{{ activeTest.averageScore }}%</div>
-                  <div class="text-sm text-gray-500 mt-1">{{ t('dashboard.activeTest.averageTime') }}</div>
-                </div>
-
-                <!-- Tiempo medio -->
-                <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <div class="flex items-center justify-between mb-3">
-                    <div class="text-sm font-medium text-gray-600">{{ t('dashboard.activeTest.bestScore') }}</div>
-                    <ClockIcon class="w-5 h-5 text-indigo-600" />
-                  </div>
-                  <div class="text-lg font-semibold text-gray-900">{{ activeTest.averageTime }}</div>
-                  <div class="text-sm text-gray-500 mt-1">{{ t('dashboard.activeTest.averageTime') }}</div>
-                </div>
-              </div>
-
-              <!-- Historial de intentos colapsable -->
-              <div class="border border-gray-200 rounded-xl overflow-hidden">
-                <button @click="showHistory = !showHistory"
-                        class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
-                  <div class="flex items-center gap-2">
-                    <h4 class="text-sm font-medium text-gray-900">{{ t('dashboard.activeTest.history') }}</h4>
-                    <span class="text-xs text-gray-500">({{ activeTest.recentAttempts.length }} {{ t('dashboard.activeTest.attempts') }})</span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm text-gray-500">{{ t('dashboard.activeTest.viewStatistics') }}</span>
-                    <ChevronDownIcon class="w-5 h-5 text-gray-500 transition-transform duration-200"
-                                   :class="{ 'rotate-180': showHistory }" />
-                  </div>
-                </button>
-                
-                <div v-show="showHistory" class="divide-y divide-gray-100">
-                  <div v-for="(attempt, index) in activeTest.recentAttempts" :key="index"
-                       class="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
-                    <div class="flex items-center gap-3">
-                      <div class="text-sm font-medium text-gray-900">{{ t('dashboard.activeTest.attemptNumber', { number: attempt.number }) }}</div>
-                      <div class="text-sm text-gray-500">{{ attempt.date }}</div>
-                    </div>
-                    <div class="flex items-center gap-4">
-                      <div class="flex items-center gap-2">
-                        <ClockIcon class="w-4 h-4 text-gray-400" />
-                        <span class="text-sm text-gray-600">{{ t('dashboard.activeTest.time') }}: {{ attempt.time }}</span>
-                      </div>
-                      <div class="text-sm font-medium" 
-                           :class="attempt.score >= 70 ? 'text-green-600' : 'text-gray-900'">
-                        {{ attempt.score }}%
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ActiveTest />
+      
+      <!-- Product Code Registration -->
+      <ProductCodeRegistration />
 
       <!-- Tests Populares -->
       <div class="bg-white rounded-2xl p-8 shadow-sm">
@@ -255,29 +139,7 @@
           </div>
 
           <!-- Weekly Progress -->
-          <div class="bg-white rounded-xl shadow-sm p-6">
-            <div class="flex items-center justify-between mb-6">
-              <h2 class="text-lg font-semibold text-gray-900">{{ t('dashboard.statistics.weeklyProgress') }}</h2>
-              <button class="text-sm text-blue-600 hover:text-blue-700 font-medium">
-                {{ t('dashboard.statistics.viewDetails') }}
-              </button>
-            </div>
-            <div class="space-y-4">
-              <div v-for="(day, index) in weeklyProgress" :key="index" class="flex items-center gap-4">
-                <div class="w-16 text-sm text-gray-500">{{ day.name }}</div>
-                <div class="flex-1">
-                  <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-blue-500 rounded-full transition-all duration-500"
-                         :style="{ width: `${day.progress}%` }">
-                    </div>
-                  </div>
-                  <div class="mt-1 text-xs text-gray-500">
-                    {{ day.progress }}% - {{ day.tests }} {{ t('dashboard.statistics.testsCompleted') }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+         
 
           <!-- Badges de Certificaciones -->
           <div class="bg-white rounded-xl shadow-sm p-6">
@@ -360,22 +222,14 @@
 <script setup>
 import { ref, computed } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
-import { Link } from '@inertiajs/vue3'
 import { 
-  ChevronLeftIcon, 
-  ChevronRightIcon,
   ClockIcon,
   CalendarIcon,
-  QuestionMarkCircleIcon,
   CloudIcon,
   CubeIcon,
   CommandLineIcon,
   ServerIcon,
   ShieldCheckIcon,
-  ChartBarIcon,
-  PlayIcon,
-  PauseIcon,
-  ChevronDownIcon,
   ArrowTopRightOnSquareIcon,
   UserGroupIcon,
   StarIcon,
@@ -383,8 +237,19 @@ import {
 } from '@heroicons/vue/24/outline'
 import { useTranslation } from '@/composables/useTranslation'
 import Calendar from '@/Components/Dashboard/Calendar.vue'
+import ProductCodeRegistration from '@/Components/Dashboard/ProductCodeRegistration.vue'
+import ActiveTest from '@/Components/Dashboard/ActiveTest.vue'
+import Badges from '@/Components/Dashboard/Badges.vue'
 
 const { t } = useTranslation()
+
+// Definir las props
+const props = defineProps({
+  badges: {
+    type: Array,
+    required: true
+  }
+})
 
 // Función para obtener el icono según la certificación
 const getCertificationIcon = (certification) => {
@@ -403,47 +268,6 @@ const getCertificationIcon = (certification) => {
 const user = {
   name: 'Mario'
 }
-
-const activeTest = {
-  certification: 'Microsoft Azure Fundamentals (AZ-900)',
-  description: 'Evaluación de conocimientos fundamentales de Microsoft Azure, incluyendo conceptos de nube, servicios principales y aspectos de seguridad.',
-  bestScore: 85,
-  attempts: 5,
-  averageScore: 80,
-  averageTime: '45 minutos',
-  lastAttemptDate: '15 Ene 2025',
-  recentAttempts: [
-    { number: 1, date: '15 Ene 2025', time: '10:00', score: 85 },
-    { number: 2, date: '16 Ene 2025', time: '11:00', score: 78 },
-    { number: 3, date: '17 Ene 2025', time: '12:00', score: 82 },
-    { number: 4, date: '18 Ene 2025', time: '13:00', score: 75 },
-    { number: 5, date: '19 Ene 2025', time: '14:00', score: 80 }
-  ]
-}
-
-const certificationsInProgress = [
-  {
-    id: 1,
-    name: 'AZ-900',
-    testsCompleted: 3,
-    totalTests: 5,
-    progress: 60,
-  },
-  {
-    id: 2,
-    name: 'AWS',
-    testsCompleted: 4,
-    totalTests: 6,
-    progress: 75,
-  },
-  {
-    id: 3,
-    name: 'Docker',
-    testsCompleted: 2,
-    totalTests: 8,
-    progress: 25,
-  }
-]
 
 const stats = {
   testsCompleted: 12,

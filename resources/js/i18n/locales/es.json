@@ -8,13 +8,15 @@
     "search": "Buscar",
     "openSidebar": "Abrir menú lateral",
     "closeSidebar": "Cerrar menú lateral",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "cancel": "Cancelar"
   },
   "navigation": {
     "dashboard": "Panel Principal",
     "trainingLibrary": "Biblioteca de Entrenamiento",
     "testing": "Evaluaciones",
-    "reports": "Reportes"
+    "reports": "Reportes",
+    "badges": "Certificaciones"
   },
   "dashboard": {
     "activeTest": {
@@ -35,7 +37,14 @@
       "attemptNumber": "Intento {number}",
       "time": "Tiempo",
       "score": "Puntuación",
-      "minutes": "{minutes} minutos"
+      "minutes": "{minutes} minutos",
+      "changeTest": "Cambiar Test",
+      "change": "Cambiar",
+      "selectTest": "Seleccionar test",
+      "select": "Seleccionar",
+      "searchTests": "Buscar tests",
+      "searchPlaceholder": "Buscar tests...",
+      "noResults": "No se encontraron resultados"
     },
     "popularTests": {
       "title": "Tests Populares",
@@ -48,7 +57,8 @@
     "badges": {
       "title": "Certificaciones",
       "viewAll": "Ver todas",
-      "viewBadge": "Ver certificación"
+      "viewBadge": "Ver certificación",
+      "progress": "Progreso"
     },
     "statistics": {
       "title": "Estadísticas",
@@ -82,6 +92,16 @@
       "certification": "Certificación",
       "date": "Fecha",
       "time": "Hora"
+    },
+    "productRegistration": {
+      "title": "Registro de Código",
+      "code": "Código",
+      "codePlaceholder": "Ingresa el código",
+      "acceptTerms": "Acepto los términos y condiciones",
+      "readTerms": "Leer términos",
+      "register": "Registrar",
+      "termsTitle": "Términos y Condiciones",
+      "termsContent": "Al registrar este código, aceptas que:\n\n1. El código es válido y no ha sido utilizado previamente.\n2. Solo puedes utilizar el código una vez.\n3. El acceso al test es personal y no transferible.\n4. Debes completar el test en el tiempo establecido.\n5. No está permitido compartir o distribuir el código.\n\nAl hacer clic en 'Registrar', confirmas que has leído y aceptas estos términos."
     }
   },
   "tests": {
@@ -301,5 +321,41 @@
       "clear": "Limpiar",
       "apply": "Aplicar"
     }
+  },
+  "badges": {
+    "title": "Insignias",
+    "subtitle": "Gestiona y visualiza tus logros y progreso",
+    "totalBadges": "Total de Insignias",
+    "earned": "ganadas",
+    "progress": "Progreso",
+    "description": "Descripción",
+    "status": "Estado",
+    "unlocked": "Desbloqueada",
+    "locked": "Bloqueada",
+    "progressText": "Progreso",
+    "unlockDate": "Fecha de desbloqueo",
+    "requirements": "Requisitos",
+    "viewDetails": "Ver detalles",
+    "earnBadge": "Ganar insignia",
+    "earnedBadges": "Insignias ganadas",
+    "remainingBadges": "Insignias restantes",
+    "completionRate": "Tasa de completado",
+    "lastEarned": "Última insignia ganada",
+    "nextBadge": "Próxima insignia",
+    "achievement": "Logro",
+    "milestone": "Hito",
+    "reward": "Recompensa",
+    "challenge": "Desafío",
+    "skill": "Habilidad",
+    "level": "Nivel",
+    "points": "Puntos",
+    "experience": "Experiencia",
+    "rank": "Rango",
+    "category": "Categoría",
+    "type": "Tipo",
+    "rarity": "Rareza",
+    "difficulty": "Dificultad",
+    "time": "Tiempo",
+    "date": "Fecha"
   }
 } 

@@ -168,15 +168,14 @@ import {
 } from '@headlessui/vue'
 import {
     Bars3Icon,
-    BellIcon,
     XMarkIcon,
     MagnifyingGlassIcon,
-    ChevronDownIcon,
     HomeIcon,
     AcademicCapIcon,
     DocumentChartBarIcon,
     ClipboardDocumentCheckIcon,
-    UserCircleIcon
+    UserCircleIcon,
+    TrophyIcon
 } from '@heroicons/vue/24/outline'
 import Sidebar from '@/Components/Sidebar.vue'
 import { usePage } from '@inertiajs/vue3'
@@ -218,6 +217,12 @@ const navigation = computed(() => [
         href: '/reports', 
         icon: DocumentChartBarIcon, 
         current: page.url === '/reports' 
+    },
+    {
+        name: t('navigation.badges'),
+        href: '/badges',
+        icon: TrophyIcon,
+        current: page.url === '/badges'
     }
 ])
 
