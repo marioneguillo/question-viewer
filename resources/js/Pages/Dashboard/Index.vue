@@ -7,7 +7,7 @@
       </div>
 
       <!-- Panel de Test Activo -->
-      <ActiveTest />
+      <ActiveTest @test-selected="handleTestChange" />
       
       <!-- Product Code Registration -->
       <ProductCodeRegistration />
@@ -115,7 +115,12 @@
         </div>
       </div>
 
-      <!-- Estadísticas y Calendario -->
+      <!-- Calendario -->
+      <div class="space-y-8">
+        <Calendar :active-test="activeTest" />
+      </div>
+
+      <!-- Estadísticas y badges  -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Estadísticas y Progreso Semanal -->
         <div class="space-y-8">
@@ -136,10 +141,7 @@
                 <div class="text-sm text-gray-600">{{ t('dashboard.statistics.studyHours') }}</div>
               </div>
             </div>
-          </div>
-
-          <!-- Weekly Progress -->
-         
+          </div>         
 
           <!-- Badges de Certificaciones -->
           <div class="bg-white rounded-xl shadow-sm p-6">
@@ -173,42 +175,38 @@
           </div>
         </div>
 
-        <!-- Calendario -->
-        <div class="space-y-8">
-          <Calendar />
-          <!-- Próximos Tests -->
-          <div class="bg-white rounded-2xl p-8 shadow-sm">
-            <div class="flex items-center justify-between mb-6">
-              <h3 class="text-xl font-semibold">{{ t('dashboard.upcomingTests.title') }}</h3>
-              <button class="text-sm text-blue-600 hover:text-blue-700">{{ t('dashboard.upcomingTests.viewAll') }}</button>
-            </div>
-            <div class="space-y-4">
-              <div v-for="test in upcomingTests" 
-                   :key="test.id"
-                   class="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors">
-                <div :class="[
-                    'p-3 rounded-lg',
+        <!-- Próximos Tests -->
+        <div class="bg-white rounded-2xl p-8 shadow-sm">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-semibold">{{ t('dashboard.upcomingTests.title') }}</h3>
+            <button class="text-sm text-blue-600 hover:text-blue-700">{{ t('dashboard.upcomingTests.viewAll') }}</button>
+          </div>
+          <div class="space-y-4">
+            <div v-for="test in upcomingTests" 
+                 :key="test.id"
+                 class="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors">
+              <div :class="[
+                  'p-3 rounded-lg',
+                  test.mode === 'practice' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'
+              ]">
+                <component :is="getCertificationIcon(test.certification)" class="w-6 h-6" />
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-medium text-gray-900">{{ test.certification }}</h4>
+                  <span :class="[
+                    'text-xs px-2 py-1 rounded-full',
                     test.mode === 'practice' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'
-                ]">
-                  <component :is="getCertificationIcon(test.certification)" class="w-6 h-6" />
+                  ]">
+                    {{ test.mode === 'practice' ? t('dashboard.upcomingTests.practice') : t('dashboard.upcomingTests.certification') }}
+                  </span>
                 </div>
-                <div class="flex-1">
-                  <div class="flex items-center justify-between">
-                    <h4 class="font-medium text-gray-900">{{ test.certification }}</h4>
-                    <span :class="[
-                      'text-xs px-2 py-1 rounded-full',
-                      test.mode === 'practice' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'
-                    ]">
-                      {{ test.mode === 'practice' ? t('dashboard.upcomingTests.practice') : t('dashboard.upcomingTests.certification') }}
-                    </span>
-                  </div>
-                  <p class="text-sm text-gray-500">{{ test.description }}</p>
-                  <div class="flex items-center gap-2 mt-2 text-sm text-gray-600">
-                    <CalendarIcon class="w-4 h-4" />
-                    <span>{{ t('dashboard.upcomingTests.date') }}: {{ test.date }}</span>
-                    <ClockIcon class="w-4 h-4 ml-2" />
-                    <span>{{ t('dashboard.upcomingTests.time') }}: {{ test.time }}</span>
-                  </div>
+                <p class="text-sm text-gray-500">{{ test.description }}</p>
+                <div class="flex items-center gap-2 mt-2 text-sm text-gray-600">
+                  <CalendarIcon class="w-4 h-4" />
+                  <span>{{ t('dashboard.upcomingTests.date') }}: {{ test.date }}</span>
+                  <ClockIcon class="w-4 h-4 ml-2" />
+                  <span>{{ t('dashboard.upcomingTests.time') }}: {{ test.time }}</span>
                 </div>
               </div>
             </div>
@@ -342,4 +340,16 @@ const certificationBadges = [
     image: '/images/AZ-900-badge.png'
   }
 ]
+
+// Estado del test activo
+const activeTest = ref({
+  id: 1,
+  certification: 'Microsoft Azure Fundamentals (AZ-900)',
+  mode: 'practice'
+})
+
+// Manejar el cambio de test
+const handleTestChange = (test) => {
+  activeTest.value = test
+}
 </script> 

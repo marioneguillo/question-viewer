@@ -73,6 +73,12 @@
       "upcomingTests": "Próximos Tests",
       "viewAll": "Ver todos",
       "noAttempts": "No hay intentos en esta fecha",
+      "attempts": "Intentos",
+      "activationDate": "Fecha de Activación",
+      "activationDescription": "Este día se activó tu test. Comienza tu viaje de aprendizaje.",
+      "expirationDate": "Fecha de Expiración",
+      "expirationDescription": "Tu test expira en este día. Asegúrate de completarlo antes.",
+      "selectDate": "Selecciona una fecha para ver los detalles",
       "time": "Hora",
       "duration": "Duración",
       "days": {

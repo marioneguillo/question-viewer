@@ -29,6 +29,7 @@ use Inertia\Inertia;
     Route::delete('/questions/{question}', [QuestionController::class, 'destroy'])->name('questions.destroy');
 
     Route::get( '/training-library', [TrainingLibraryController::class, 'index'])->name('training.library');
+    Route::get( '/training-library2', [TrainingLibraryController::class, 'index2'])->name('training.library2');
     Route::get( '/testing', [TestingController::class, 'index'])->name('testing.index');
 
 // Ruta de notificaciones

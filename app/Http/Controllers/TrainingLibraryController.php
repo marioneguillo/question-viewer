@@ -12,4 +12,9 @@ class TrainingLibraryController extends BaseController
     {
         return Inertia::render('TrainingLibrary/Index');
     }   
+
+    public function index2()
+    {
+        return Inertia::render('TrainingLibrary/Index2');
+    }
 } 

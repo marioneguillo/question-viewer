@@ -68,24 +68,44 @@
                 </div>
                 
                 <div class="flex-1 overflow-y-auto p-4">
-                  <div v-for="(tests, category) in groupedTests" :key="category" class="mb-6 last:mb-0">
-                    <div class="flex items-center gap-2 mb-3">
-                      <component :is="getCategoryIcon(category)" class="w-5 h-5 text-gray-400" />
-                      <h4 class="text-sm font-medium text-gray-500">{{ category }}</h4>
-                    </div>
+                  <div v-for="(group, category) in groupedTests" :key="category" class="mb-4">
+                    <div class="text-sm font-medium text-gray-500 mb-2">{{ category }}</div>
                     <div class="space-y-2">
-                      <div v-for="test in tests" :key="test.id"
-                           @click="selectTest(test)"
-                           class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer rounded-lg transition-colors"
-                           :class="{ 'bg-blue-50': test.id === activeTest.id }">
-                        <component :is="getCertificationIcon(test.certification)" 
-                                  class="w-6 h-6 text-gray-600" />
-                        <div class="flex-1">
-                          <div class="text-sm font-medium text-gray-900">{{ test.certification }}</div>
-                          <div class="text-xs text-gray-500">{{ test.mode === 'practice' ? t('dashboard.activeTest.practiceMode') : t('dashboard.activeTest.certificationMode') }}</div>
+                      <button 
+                        v-for="test in group" 
+                        :key="test.id"
+                        @click="selectTest(test)"
+                        class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                        :class="{ 'bg-blue-50': activeTest.id === test.id }"
+                      >
+                        <div class="flex items-center gap-3">
+                          <div :class="[
+                            'p-2 rounded-lg',
+                            test.mode === 'practice' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'
+                          ]">
+                            <component :is="getCertificationIcon(test.certification)" class="w-5 h-5" />
+                          </div>
+                          <div class="text-left">
+                            <div class="font-medium text-gray-900">{{ test.certification }}</div>
+                            <div class="text-sm text-gray-500">{{ test.mode === 'practice' ? t('dashboard.activeTest.practiceMode') : t('dashboard.activeTest.certificationMode') }}</div>
+                            <div class="text-xs text-gray-400 mt-1">
+                              {{ t('dashboard.activeTest.activationDate') }}: {{ formatDate(test.activationDate) }} - 
+                              {{ t('dashboard.activeTest.expirationDate') }}: {{ formatDate(test.expirationDate) }}
+                            </div>
+                          </div>
                         </div>
-                        <div class="text-sm font-medium text-gray-900">{{ test.bestScore }}%</div>
-                      </div>
+                        <div class="flex items-center gap-4">
+                          <div class="text-right">
+                            <div class="text-sm font-medium text-gray-900">
+                              {{ test.attempts.length }} {{ t('dashboard.activeTest.attempts') }}
+                            </div>
+                            <div class="text-xs text-gray-500">
+                              {{ t('dashboard.activeTest.lastAttempt') }}: {{ test.attempts.length > 0 ? formatDate(test.attempts[test.attempts.length - 1].date) : '-' }}
+                            </div>
+                          </div>
+                          <ChevronRightIcon class="w-5 h-5 text-gray-400" />
+                        </div>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -114,7 +134,7 @@
                     <div class="text-sm font-medium text-gray-600">{{ t('dashboard.activeTest.attempts') }}</div>
                     <ChartBarIcon class="w-5 h-5 text-blue-600" />
                   </div>
-                  <div class="text-lg font-semibold text-gray-900">{{ activeTest.attempts }}</div>
+                  <div class="text-lg font-semibold text-gray-900">{{ activeTest.totalAttempts }}</div>
                   <div class="text-sm text-gray-500 mt-1">{{ t('dashboard.activeTest.lastAttempt', { date: activeTest.lastAttemptDate }) }}</div>
                 </div>
 
@@ -145,7 +165,7 @@
                         class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
                   <div class="flex items-center gap-2">
                     <h4 class="text-sm font-medium text-gray-900">{{ t('dashboard.activeTest.history') }}</h4>
-                    <span class="text-xs text-gray-500">({{ activeTest.recentAttempts.length }} {{ t('dashboard.activeTest.attempts') }})</span>
+                    <span class="text-xs text-gray-500">({{ activeTest.totalAttempts }} {{ t('dashboard.activeTest.attempts') }})</span>
                   </div>
                   <div class="flex items-center gap-2">
                     <span class="text-sm text-gray-500">{{ t('dashboard.activeTest.viewStatistics') }}</span>
@@ -198,6 +218,7 @@ import {
   ChevronDownIcon,
   MagnifyingGlassIcon,
   XMarkIcon,
+  ChevronRightIcon,
 } from '@heroicons/vue/24/outline'
 
 const { t } = useTranslation()
@@ -206,78 +227,235 @@ const searchQuery = ref('')
 const showDropdown = ref(false)
 const showHistory = ref(false)
 
-// Datos de ejemplo para los tests activos
 const tests = ref([
   {
     id: 1,
     certification: 'Microsoft Azure Fundamentals (AZ-900)',
     category: 'Cloud',
     mode: 'practice',
-    description: t('tests.AZ-900.description'),
-    bestScore: 85,
-    attempts: 5,
-    averageScore: 80,
-    averageTime: '45 minutos',
-    lastAttemptDate: '15 Ene 2025',
-    recentAttempts: [
-      { number: 1, date: '15 Ene 2025', time: '10:00', score: 85 },
-      { number: 2, date: '16 Ene 2025', time: '11:00', score: 78 },
-      { number: 3, date: '17 Ene 2025', time: '12:00', score: 82 },
-      { number: 4, date: '18 Ene 2025', time: '13:00', score: 75 },
-      { number: 5, date: '19 Ene 2025', time: '14:00', score: 80 }
-    ]
+    attempts: [
+      {
+        id: 1,
+        date: '2025-03-25',
+        score: 85,
+        time: '10:00',
+        duration: '45 min',
+        type: 'practice'
+      },
+      {
+        id: 2,
+        date: '2025-03-26',
+        score: 78,
+        time: '11:00',
+        duration: '42 min',
+        type: 'practice'
+      },
+      {
+        id: 3,
+        date: '2025-03-27',
+        score: 82,
+        time: '12:00',
+        duration: '40 min',
+        type: 'practice'
+      },
+      {
+        id: 4,
+        date: '2025-03-28',
+        score: 92,
+        time: '15:30',
+        duration: '35 min',
+        type: 'certification'
+      }
+    ],
+    activationDate: '2025-03-15',
+    expirationDate: '2025-04-15'
   },
   {
     id: 2,
     certification: 'AWS Cloud Practitioner',
     category: 'Cloud',
-    mode: 'certification',
-    description: t('tests.SAA-C03.description'),
-    bestScore: 92,
-    attempts: 3,
-    averageScore: 88,
-    averageTime: '60 minutos',
-    lastAttemptDate: '18 Ene 2025',
-    recentAttempts: [
-      { number: 1, date: '18 Ene 2025', time: '14:00', score: 92 },
-      { number: 2, date: '19 Ene 2025', time: '15:00', score: 85 }
-    ]
+    mode: 'practice',
+    attempts: [],
+    activationDate: '2025-03-20',
+    expirationDate: '2025-04-20'
   },
   {
     id: 3,
-    certification: 'CompTIA Security+',
-    category: 'Security',
+    certification: 'Docker Fundamentals',
+    category: 'Containers',
     mode: 'practice',
-    description: t('tests.SY0-601.description'),
-    bestScore: 78,
-    attempts: 2,
-    averageScore: 75,
-    averageTime: '75 minutos',
-    lastAttemptDate: '20 Ene 2025',
-    recentAttempts: [
-      { number: 1, date: '20 Ene 2025', time: '16:00', score: 78 },
-      { number: 2, date: '21 Ene 2025', time: '17:00', score: 72 }
-    ]
+    attempts: [],
+    activationDate: '2025-03-25',
+    expirationDate: '2025-04-25'
   },
   {
     id: 4,
+    certification: 'CompTIA Security+',
+    category: 'Security',
+    mode: 'certification',
+    attempts: [
+      {
+        id: 1,
+        date: '2025-03-20',
+        score: 88,
+        time: '14:00',
+        duration: '60 min',
+        type: 'certification'
+      }
+    ],
+    activationDate: '2025-03-10',
+    expirationDate: '2025-04-10'
+  },
+  {
+    id: 5,
     certification: 'CompTIA Linux+',
     category: 'Operating Systems',
     mode: 'practice',
-    description: t('tests.LPIC-1.description'),
-    bestScore: 88,
-    attempts: 4,
-    averageScore: 85,
-    averageTime: '60 minutos',
-    lastAttemptDate: '22 Ene 2025',
-    recentAttempts: [
-      { number: 1, date: '22 Ene 2025', time: '18:00', score: 88 },
-      { number: 2, date: '23 Ene 2025', time: '19:00', score: 82 }
-    ]
+    attempts: [
+      {
+        id: 1,
+        date: '2025-03-22',
+        score: 85,
+        time: '16:00',
+        duration: '45 min',
+        type: 'practice'
+      },
+      {
+        id: 2,
+        date: '2025-03-23',
+        score: 92,
+        time: '11:00',
+        duration: '40 min',
+        type: 'practice'
+      }
+    ],
+    activationDate: '2025-03-15',
+    expirationDate: '2025-04-15'
+  },
+  {
+    id: 6,
+    certification: 'Kubernetes Administrator',
+    category: 'Containers',
+    mode: 'certification',
+    attempts: [
+      {
+        id: 1,
+        date: '2025-03-24',
+        score: 78,
+        time: '13:00',
+        duration: '50 min',
+        type: 'practice'
+      },
+      {
+        id: 2,
+        date: '2025-03-25',
+        score: 85,
+        time: '14:00',
+        duration: '45 min',
+        type: 'practice'
+      },
+      {
+        id: 3,
+        date: '2025-03-26',
+        score: 92,
+        time: '15:30',
+        duration: '35 min',
+        type: 'certification'
+      }
+    ],
+    activationDate: '2025-03-25',
+    expirationDate: '2025-04-25'
+  },
+  {
+    id: 7,
+    certification: 'Network+',
+    category: 'Networking',
+    mode: 'practice',
+    attempts: [
+      {
+        id: 1,
+        date: '2025-03-12',
+        score: 78,
+        time: '13:00',
+        duration: '50 min',
+        type: 'practice'
+      },
+      {
+        id: 2,
+        date: '2025-03-15',
+        score: 85,
+        time: '14:00',
+        duration: '45 min',
+        type: 'practice'
+      },
+      {
+        id: 3,
+        date: '2025-03-16',
+        score: 92,
+        time: '15:30',
+        duration: '35 min',
+        type: 'certification'
+      }
+    ],
+    activationDate: '2025-03-02',
+    expirationDate: '2025-04-20'
   }
 ])
 
-const activeTest = ref(tests.value[0])
+const activeTest = ref({
+  id: 1,
+  certification: 'Microsoft Azure Fundamentals (AZ-900)',
+  category: 'Cloud',
+  mode: 'practice',
+  attempts: [
+    {
+      id: 1,
+      date: '2025-03-25',
+      score: 85,
+      time: '10:00',
+      duration: '45 min',
+      type: 'practice'
+    },
+    {
+      id: 2,
+      date: '2025-03-26',
+      score: 78,
+      time: '11:00',
+      duration: '42 min',
+      type: 'practice'
+    },
+    {
+      id: 3,
+      date: '2025-03-27',
+      score: 82,
+      time: '12:00',
+      duration: '40 min',
+      type: 'practice'
+    },
+    {
+      id: 4,
+      date: '2025-03-28',
+      score: 92,
+      time: '15:30',
+      duration: '35 min',
+      type: 'certification'
+    }
+  ],
+  activationDate: '2025-03-15',
+  expirationDate: '2025-04-15',
+  bestScore: 92,
+  totalAttempts: 4,
+  averageScore: 84,
+  averageTime: '40 min',
+  lastAttemptDate: '28 Mar 2025',
+  recentAttempts: [
+    { number: 1, date: '25 Mar 2025', time: '10:00', score: 85 },
+    { number: 2, date: '26 Mar 2025', time: '11:00', score: 78 },
+    { number: 3, date: '27 Mar 2025', time: '12:00', score: 82 },
+    { number: 4, date: '28 Mar 2025', time: '15:30', score: 92 }
+  ],
+  description: t('tests.AZ-900.description')
+})
 
 const filteredTests = computed(() => {
   if (!searchQuery.value) return tests.value
@@ -285,6 +463,7 @@ const filteredTests = computed(() => {
   return tests.value.filter(test => 
     test.certification.toLowerCase().includes(query) ||
     test.category.toLowerCase().includes(query) ||
+    test.mode.toLowerCase().includes(query) ||
     (test.mode === 'practice' ? t('dashboard.activeTest.practiceMode') : t('dashboard.activeTest.certificationMode')).toLowerCase().includes(query)
   )
 })
@@ -304,9 +483,51 @@ const groupedTests = computed(() => {
 })
 
 const selectTest = (test) => {
-  activeTest.value = test
+  if (!test) return
+
+  // Crear un objeto con la estructura completa del test
+  const newActiveTest = {
+    ...test,
+    bestScore: test.attempts.length > 0 
+      ? Math.max(...test.attempts.map(a => a.score))
+      : 0,
+    totalAttempts: test.attempts.length,
+    averageScore: test.attempts.length > 0
+      ? Math.round(test.attempts.reduce((acc, curr) => acc + curr.score, 0) / test.attempts.length)
+      : 0,
+    averageTime: test.attempts.length > 0
+      ? test.attempts[0].duration
+      : '0 min',
+    lastAttemptDate: test.attempts.length > 0
+      ? new Date(test.attempts[test.attempts.length - 1].date).toLocaleDateString('es-ES', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        })
+      : '-',
+    recentAttempts: test.attempts.map((attempt, index) => ({
+      number: index + 1,
+      date: new Date(attempt.date).toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      }),
+      time: attempt.time,
+      score: attempt.score
+    })),
+    description: t(`tests.${test.certification.split('(')[1]?.replace(')', '') || test.certification.replace(/\s+/g, '')}.description`)
+  }
+
+  // Actualizar el test activo
+  activeTest.value = newActiveTest
   showDropdown.value = false
+
+  // Emitir el evento con el test seleccionado
+  emit('test-selected', newActiveTest)
 }
+
+// Definir los eventos que emite el componente
+const emit = defineEmits(['test-selected'])
 
 const getCertificationIcon = (certification) => {
   const icons = {
@@ -329,5 +550,15 @@ const getCategoryIcon = (category) => {
     'Networking': ServerIcon
   }
   return icons[category] || QuestionMarkCircleIcon
-} 
+}
+
+const formatDate = (dateString) => {
+  if (!dateString) return '-'
+  const date = new Date(dateString)
+  return date.toLocaleDateString('es-ES', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  })
+}
 </script>
