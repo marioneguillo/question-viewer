@@ -1,16 +1,24 @@
 <template>
-  <div class="bg-white rounded-xl border p-6">
-    <div class="flex items-center justify-between mb-6">
-      <h3 class="text-lg font-medium text-gray-900">{{ t('reports.test.calendar.title') }}</h3>
-      <div class="flex items-center gap-4">
-        <button @click="previousWeek" class="p-2 hover:bg-gray-100 rounded-lg">
-          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <div class="bg-white rounded-lg p-4">
+    <!-- Encabezado del Calendario -->
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-2">
+        <button
+          @click="previousMonth"
+          class="p-1.5 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+        >
+          <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <span class="text-sm font-medium text-gray-700">{{ currentWeekRange }}</span>
-        <button @click="nextWeek" class="p-2 hover:bg-gray-100 rounded-lg">
-          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <h3 class="text-sm font-medium text-gray-900">
+          {{ currentDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }) }}
+        </h3>
+        <button
+          @click="nextMonth"
+          class="p-1.5 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+        >
+          <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </button>
@@ -18,121 +26,65 @@
     </div>
 
     <!-- Días de la semana -->
-    <div class="grid grid-cols-7 gap-2 mb-4">
-      <div v-for="day in weekDays" :key="day" class="text-center text-sm font-medium text-gray-500">
-        {{ t(`reports.test.calendar.days.${day.toLowerCase()}`) }}
+    <div class="grid grid-cols-7 gap-0.5 mb-1">
+      <div
+        v-for="day in ['D', 'L', 'M', 'X', 'J', 'V', 'S']"
+        :key="day"
+        class="text-center text-xs font-medium text-gray-500"
+      >
+        {{ day }}
       </div>
     </div>
 
-    <!-- Calendario -->
-    <div class="grid grid-cols-7 gap-2">
-      <div v-for="day in calendarDays" :key="day.date" 
-           class="aspect-square p-2 border rounded-lg relative group"
-           :class="{
-             'bg-gray-50': !day.isCurrentMonth,
-             'hover:bg-gray-50 cursor-pointer': day.hasActivity
-           }"
-           @click="day.hasActivity && showDayDetails(day)">
-        <div class="text-sm font-medium mb-1" :class="{ 'text-gray-400': !day.isCurrentMonth }">
-          {{ day.dayNumber }}
-        </div>
-        
-        <!-- Indicadores de actividad -->
-        <div v-if="day.hasActivity" class="space-y-1">
-          <div v-for="attempt in day.attempts" :key="attempt.id"
-               class="text-xs p-1 rounded"
-               :class="{
-                 'bg-blue-100 text-blue-800': attempt.mode === 'certification',
-                 'bg-green-100 text-green-800': attempt.mode === 'practice'
-               }">
-            <div class="font-medium">
-              {{ attempt.mode === 'certification' ? t('reports.test.calendar.certification') : t('reports.test.calendar.practice') }}
-            </div>
-            <div class="mt-0.5">
-              {{ attempt.score }}%
-            </div>
-          </div>
-        </div>
-
-        <!-- Tooltip de previsualización -->
-        <div v-if="day.hasActivity" 
-             class="absolute z-10 invisible group-hover:visible bg-white border rounded-lg shadow-lg p-3 w-64 mt-2 left-1/2 transform -translate-x-1/2">
-          <div class="text-sm font-medium text-gray-900 mb-2">{{ formatDate(day.date) }}</div>
-          <div class="space-y-2">
-            <div v-for="attempt in day.attempts" :key="attempt.id" class="text-xs">
-              <div class="flex items-center justify-between">
-                <span class="font-medium">{{ attempt.mode === 'certification' ? t('reports.test.calendar.certification') : t('reports.test.calendar.practice') }}</span>
-                <span class="text-gray-500">{{ formatTime(attempt.date) }}</span>
-              </div>
-              <div class="grid grid-cols-2 gap-2 mt-1">
-                <div>
-                  <span class="text-gray-500">{{ t('reports.test.calendar.score') }}:</span>
-                  <span class="font-medium ml-1">{{ attempt.score }}%</span>
-                </div>
-                <div>
-                  <span class="text-gray-500">{{ t('reports.test.calendar.duration') }}:</span>
-                  <span class="font-medium ml-1">{{ formatDuration(attempt.duration) }}</span>
-                </div>
-                <div>
-                  <span class="text-gray-500">{{ t('reports.test.calendar.questions') }}:</span>
-                  <span class="font-medium ml-1">{{ attempt.correctAnswers + attempt.incorrectAnswers }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- Días del mes -->
+    <div class="grid grid-cols-7 gap-0.5">
+      <button
+        v-for="day in daysInMonth"
+        :key="day.date.toISOString()"
+        @click="selectDate(day.date)"
+        class="aspect-square p-1 rounded-md text-xs transition-colors duration-200 relative"
+        :class="{
+          'text-gray-300': !day.isCurrentMonth,
+          'text-gray-900': day.isCurrentMonth,
+          'bg-indigo-50 hover:bg-indigo-100': day.hasAttempts,
+          'hover:bg-gray-50': !day.hasAttempts,
+          'ring-1 ring-indigo-500': selectedDate && selectedDate.toDateString() === day.date.toDateString()
+        }"
+      >
+        {{ day.date.getDate() }}
+        <div
+          v-if="day.hasAttempts"
+          class="absolute bottom-0.5 left-1/2 transform -translate-x-1/2 w-1 h-1 rounded-full bg-indigo-500"
+        ></div>
+      </button>
     </div>
 
-    <!-- Modal de detalles del día -->
-    <div v-if="selectedDay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white rounded-xl p-6 max-w-lg w-full mx-4">
-        <div class="flex items-center justify-between mb-4">
-          <h4 class="text-lg font-medium text-gray-900">
-            {{ formatDate(selectedDay.date) }}
-          </h4>
-          <button @click="selectedDay = null" class="p-2 hover:bg-gray-100 rounded-lg">
-            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        <div class="space-y-4">
-          <div v-for="attempt in selectedDay.attempts" :key="attempt.id"
-               class="p-4 rounded-lg border">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-sm font-medium"
-                    :class="{
-                      'text-blue-800': attempt.mode === 'certification',
-                      'text-green-800': attempt.mode === 'practice'
-                    }">
-                {{ attempt.mode === 'certification' ? t('reports.test.calendar.certification') : t('reports.test.calendar.practice') }}
-              </span>
-              <span class="text-sm text-gray-500">{{ formatTime(attempt.date) }}</span>
+    <!-- Detalles de intentos del día seleccionado -->
+    <div v-if="selectedDate && getAttemptsForDate(selectedDate).length > 0" class="mt-4">
+      <h4 class="text-xs font-medium text-gray-900 mb-2">
+        Intentos del {{ formatDate(selectedDate) }}
+      </h4>
+      <div class="space-y-1.5">
+        <div
+          v-for="attempt in getAttemptsForDate(selectedDate)"
+          :key="attempt.id"
+          class="bg-gray-50 rounded-md p-2"
+        >
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs font-medium text-gray-900">{{ formatTime(attempt.date) }}</p>
+              <p class="text-xs text-gray-500">
+                {{ attempt.mode === 'certification' ? 'Certificación' : 'Práctica' }}
+              </p>
             </div>
-            
-            <div class="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span class="text-gray-500">{{ t('reports.test.calendar.score') }}:</span>
-                <span class="font-medium ml-1">{{ attempt.score }}%</span>
-              </div>
-              <div>
-                <span class="text-gray-500">{{ t('reports.test.calendar.duration') }}:</span>
-                <span class="font-medium ml-1">{{ formatDuration(attempt.duration) }}</span>
-              </div>
-              <div>
-                <span class="text-gray-500">{{ t('reports.test.calendar.questions') }}:</span>
-                <span class="font-medium ml-1">{{ attempt.correctAnswers + attempt.incorrectAnswers }}</span>
-              </div>
-              <div>
-                <span class="text-gray-500">{{ t('reports.test.calendar.correctAnswers') }}:</span>
-                <span class="font-medium ml-1">{{ attempt.correctAnswers }}</span>
-              </div>
-              <div>
-                <span class="text-gray-500">{{ t('reports.test.calendar.incorrectAnswers') }}:</span>
-                <span class="font-medium ml-1">{{ attempt.incorrectAnswers }}</span>
-              </div>
+            <div class="text-right">
+              <p class="text-xs font-semibold" :class="{
+                'text-green-600': attempt.passed,
+                'text-red-600': !attempt.passed
+              }">
+                {{ attempt.score }}%
+              </p>
+              <p class="text-xs text-gray-500">{{ formatDuration(attempt.duration) }}</p>
             </div>
           </div>
         </div>
@@ -143,106 +95,125 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { useTranslation } from '@/composables/useTranslation'
 
 const props = defineProps({
-  test: {
-    type: Object,
+  attempts: {
+    type: Array,
     required: true
   }
 })
 
-const { t } = useTranslation()
-
 const currentDate = ref(new Date())
-const selectedDay = ref(null)
+const selectedDate = ref(null)
 
-const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-
-const currentWeekRange = computed(() => {
-  const start = new Date(currentDate.value)
-  start.setDate(start.getDate() - start.getDay())
-  const end = new Date(start)
-  end.setDate(end.getDate() + 6)
-  return `${formatDate(start)} - ${formatDate(end)}`
-})
-
-const calendarDays = computed(() => {
-  const start = new Date(currentDate.value)
-  start.setDate(start.getDate() - start.getDay())
+// Generar días del mes actual
+const daysInMonth = computed(() => {
+  const year = currentDate.value.getFullYear()
+  const month = currentDate.value.getMonth()
+  const firstDay = new Date(year, month, 1)
+  const lastDay = new Date(year, month + 1, 0)
   const days = []
-  
-  for (let i = 0; i < 7; i++) {
-    const date = new Date(start)
-    date.setDate(date.getDate() + i)
-    const dayNumber = date.getDate()
-    const isCurrentMonth = date.getMonth() === currentDate.value.getMonth()
-    
-    // Buscar intentos para este día
-    const attempts = props.test.attempts.filter(attempt => {
-      const attemptDate = new Date(attempt.date)
-      return attemptDate.getDate() === date.getDate() &&
-             attemptDate.getMonth() === date.getMonth() &&
-             attemptDate.getFullYear() === date.getFullYear()
-    })
-    
+
+  // Añadir días del mes anterior
+  const firstDayWeekday = firstDay.getDay()
+  for (let i = firstDayWeekday - 1; i >= 0; i--) {
+    const date = new Date(year, month, -i)
     days.push({
-      date: formatDate(date),
-      dayNumber,
-      isCurrentMonth,
-      hasActivity: attempts.length > 0,
-      attempts
+      date,
+      isCurrentMonth: false,
+      hasAttempts: hasAttemptsOnDate(date)
     })
   }
-  
+
+  // Añadir días del mes actual
+  for (let i = 1; i <= lastDay.getDate(); i++) {
+    const date = new Date(year, month, i)
+    days.push({
+      date,
+      isCurrentMonth: true,
+      hasAttempts: hasAttemptsOnDate(date)
+    })
+  }
+
+  // Añadir días del mes siguiente
+  const remainingDays = 42 - days.length // 6 semanas * 7 días = 42
+  for (let i = 1; i <= remainingDays; i++) {
+    const date = new Date(year, month + 1, i)
+    days.push({
+      date,
+      isCurrentMonth: false,
+      hasAttempts: hasAttemptsOnDate(date)
+    })
+  }
+
   return days
 })
 
-function formatDate(date) {
-  if (!(date instanceof Date)) {
-    date = new Date(date)
-  }
+// Verificar si hay intentos en una fecha específica
+const hasAttemptsOnDate = (date) => {
+  return props.attempts.some(attempt => {
+    const attemptDate = new Date(attempt.date)
+    return attemptDate.toDateString() === date.toDateString()
+  })
+}
+
+// Obtener intentos de una fecha específica
+const getAttemptsForDate = (date) => {
+  return props.attempts.filter(attempt => {
+    const attemptDate = new Date(attempt.date)
+    return attemptDate.toDateString() === date.toDateString()
+  })
+}
+
+// Navegar entre meses
+const previousMonth = () => {
+  currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() - 1)
+}
+
+const nextMonth = () => {
+  currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() + 1)
+}
+
+// Formatear fecha
+const formatDate = (date) => {
   return date.toLocaleDateString('es-ES', {
     year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
+    month: 'long',
+    day: 'numeric'
   })
 }
 
-function formatTime(dateString) {
-  if (!dateString) return ''
-  const date = new Date(dateString)
-  if (isNaN(date.getTime())) return ''
-  return date.toLocaleTimeString('es-ES', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  })
+// Formatear hora
+const formatTime = (dateString) => {
+  if (!dateString) return '00:00'
+  try {
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return '00:00'
+    return date.toLocaleTimeString('es-ES', {
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  } catch (error) {
+    return '00:00'
+  }
 }
 
-function formatDuration(duration) {
-  if (!duration) return ''
-  // Si la duración ya está en formato "45m", devolverla tal cual
-  if (duration.endsWith('m')) return duration
-  // Si está en formato "45 min", convertirla a "45m"
-  if (duration.endsWith(' min')) return duration.replace(' min', 'm')
-  // Si no tiene formato, asumir que son minutos y añadir 'm'
-  return `${duration}m`
+// Formatear duración
+const formatDuration = (duration) => {
+  if (!duration) return '00:00'
+  try {
+    const [hours, minutes] = duration.split(':').map(Number)
+    if (isNaN(hours) || isNaN(minutes)) return '00:00'
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
+  } catch (error) {
+    return '00:00'
+  }
 }
 
-function previousWeek() {
-  const newDate = new Date(currentDate.value)
-  newDate.setDate(newDate.getDate() - 7)
-  currentDate.value = newDate
-}
+const emit = defineEmits(['select-date'])
 
-function nextWeek() {
-  const newDate = new Date(currentDate.value)
-  newDate.setDate(newDate.getDate() + 7)
-  currentDate.value = newDate
-}
-
-function showDayDetails(day) {
-  selectedDay.value = day
+const selectDate = (date) => {
+  selectedDate.value = date
+  emit('select-date', date)
 }
 </script> 

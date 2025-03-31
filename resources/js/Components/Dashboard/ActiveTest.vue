@@ -127,35 +127,56 @@
               </div>  
 
               <!-- Métricas en cards -->
-              <div class="grid grid-cols-3 gap-4 mb-8">
+              <div class="grid grid-cols-3 gap-6 mb-8">
                 <!-- Total de intentos -->
-                <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <div class="flex items-center justify-between mb-3">
-                    <div class="text-sm font-medium text-gray-600">{{ t('dashboard.activeTest.attempts') }}</div>
-                    <ChartBarIcon class="w-5 h-5 text-blue-600" />
+                <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm font-medium text-gray-600">{{ t('dashboard.activeTest.attempts') }}</p>
+                      <p class="mt-1 text-2xl font-semibold text-gray-900">{{ activeTest.totalAttempts }}</p>
+                    </div>
+                    <div class="p-2.5 bg-blue-50 rounded-lg">
+                      <ChartBarIcon class="w-6 h-6 text-blue-600" />
+                    </div>
                   </div>
-                  <div class="text-lg font-semibold text-gray-900">{{ activeTest.totalAttempts }}</div>
-                  <div class="text-sm text-gray-500 mt-1">{{ t('dashboard.activeTest.lastAttempt', { date: activeTest.lastAttemptDate }) }}</div>
+                  <div class="mt-4 flex items-center text-sm text-gray-500">
+                    <CalendarIcon class="w-4 h-4 mr-1.5" />
+                    {{ t('dashboard.activeTest.lastAttempt', { date: activeTest.lastAttemptDate }) }}
+                  </div>
                 </div>
 
                 <!-- Puntuación media -->
-                <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <div class="flex items-center justify-between mb-3">
-                    <div class="text-sm font-medium text-gray-600">{{ t('dashboard.activeTest.average') }}</div>
-                    <QuestionMarkCircleIcon class="w-5 h-5 text-green-600" />
+                <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm font-medium text-gray-600">{{ t('dashboard.activeTest.average') }}</p>
+                      <p class="mt-1 text-2xl font-semibold text-gray-900">{{ activeTest.averageScore }}%</p>
+                    </div>
+                    <div class="p-2.5 bg-green-50 rounded-lg">
+                      <QuestionMarkCircleIcon class="w-6 h-6 text-green-600" />
+                    </div>
                   </div>
-                  <div class="text-lg font-semibold text-gray-900">{{ activeTest.averageScore }}%</div>
-                  <div class="text-sm text-gray-500 mt-1">{{ t('dashboard.activeTest.averageTime') }}</div>
+                  <div class="mt-4 flex items-center text-sm text-gray-500">
+                    <ChartBarIcon class="w-4 h-4 mr-1.5" />
+                    {{ t('dashboard.activeTest.averageTime') }}
+                  </div>
                 </div>
 
                 <!-- Tiempo medio -->
-                <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <div class="flex items-center justify-between mb-3">
-                    <div class="text-sm font-medium text-gray-600">{{ t('dashboard.activeTest.bestScore') }}</div>
-                    <ClockIcon class="w-5 h-5 text-indigo-600" />
+                <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm font-medium text-gray-600">{{ t('dashboard.activeTest.bestScore') }}</p>
+                      <p class="mt-1 text-2xl font-semibold text-gray-900">{{ activeTest.averageTime }}</p>
+                    </div>
+                    <div class="p-2.5 bg-indigo-50 rounded-lg">
+                      <ClockIcon class="w-6 h-6 text-indigo-600" />
+                    </div>
                   </div>
-                  <div class="text-lg font-semibold text-gray-900">{{ activeTest.averageTime }}</div>
-                  <div class="text-sm text-gray-500 mt-1">{{ t('dashboard.activeTest.averageTime') }}</div>
+                  <div class="mt-4 flex items-center text-sm text-gray-500">
+                    <ChartBarIcon class="w-4 h-4 mr-1.5" />
+                    {{ t('dashboard.activeTest.averageTime') }}
+                  </div>
                 </div>
               </div>
 
@@ -219,6 +240,7 @@ import {
   MagnifyingGlassIcon,
   XMarkIcon,
   ChevronRightIcon,
+  CalendarIcon,
 } from '@heroicons/vue/24/outline'
 
 const { t } = useTranslation()

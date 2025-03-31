@@ -207,7 +207,7 @@ const navigation = computed(() => [
         current: page.url === '/training-library' 
     },
     { 
-        name: t('navigation.trainingLibrary'), 
+        name: t('navigation.trainingLibrary2'), 
         href: '/training-library2', 
         icon: AcademicCapIcon, 
         current: page.url === '/training-library2' 

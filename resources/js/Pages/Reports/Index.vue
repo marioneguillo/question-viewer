@@ -22,10 +22,6 @@
                 </svg>
               </div>
             </div>
-            <div class="mt-4 flex items-center text-sm">
-              <span class="text-green-600 font-medium">+2</span>
-              <span class="text-gray-600 ml-1">{{ t('reports.metrics.vsLastMonth') }}</span>
-            </div>
           </div>
 
           <div class="bg-white rounded-xl border p-6">
@@ -39,10 +35,6 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
-            </div>
-            <div class="mt-4 flex items-center text-sm">
-              <span class="text-green-600 font-medium">+5.2%</span>
-              <span class="text-gray-600 ml-1">{{ t('reports.metrics.vsLastMonth') }}</span>
             </div>
           </div>
 
@@ -58,16 +50,12 @@
                 </svg>
               </div>
             </div>
-            <div class="mt-4 flex items-center text-sm">
-              <span class="text-green-600 font-medium">+8.3</span>
-              <span class="text-gray-600 ml-1">{{ t('reports.metrics.vsLastMonth') }}</span>
-            </div>
           </div>
 
           <div class="bg-white rounded-xl border p-6">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-sm font-medium text-gray-600">{{ t('reports.metrics.certifications') }}</p>
+                <p class="text-sm font-medium text-gray-600">{{ t('badges.title') }}</p>
                 <p class="mt-1 text-2xl font-semibold text-gray-900">1</p>
               </div>
               <div class="p-3 bg-purple-100 rounded-lg">
@@ -76,14 +64,11 @@
                 </svg>
               </div>
             </div>
-            <div class="mt-4 flex items-center text-sm">
-              <span class="text-green-600 font-medium">+1</span>
-              <span class="text-gray-600 ml-1">{{ t('reports.metrics.vsLastMonth') }}</span>
-            </div>
           </div>
-        </div>
+        </div>  
 
         <!-- Gráficos y análisis -->
+         <!---
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <div class="bg-white rounded-xl border p-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t('reports.charts.certificationPerformance') }}</h3>
@@ -109,8 +94,86 @@
             </div>
           </div>
         </div>
+        -->
+        <!-- Reportes de Tests -->
+        <div class="space-y-6">
+          <h2 class="text-xl font-semibold text-gray-900">{{ t('reports.test.title') }}</h2>
+          
+          <!-- Buscador -->
+          <div class="relative">
+            <input
+              v-model="searchQuery"
+              type="text"
+              :placeholder="t('reports.test.searchPlaceholder')"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+          </div>
 
-        <!-- Recomendaciones -->
+          <!-- Grid de Tests -->
+          <div v-if="!selectedTest" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div
+              v-for="test in filteredTests"
+              :key="test.id"
+              class="bg-white rounded-xl border p-6 hover:border-blue-500 transition-colors duration-200 cursor-pointer flex flex-col"
+              @click="selectTest(test)"
+            >
+              <div class="flex-1">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <h4 class="text-lg font-medium text-gray-900">{{ test.name }}</h4>
+                    <span class="mt-2 inline-block text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                      {{ test.category }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mt-4 pt-4 border-t border-gray-100">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center text-sm text-gray-500">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {{ test.lastAttempt.duration }}
+                  </div>
+                  <span
+                    class="px-2 py-1 text-xs font-medium rounded-full"
+                    :class="{
+                      'bg-green-100 text-green-800': test.lastAttempt.passed,
+                      'bg-red-100 text-red-800': !test.lastAttempt.passed
+                    }"
+                  >
+                    {{ test.lastAttempt.score }}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detalles del Test Seleccionado -->
+          <div v-else class="bg-white rounded-xl border p-6">
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center space-x-4">
+                <button
+                  @click="selectedTest = null"
+                  class="text-gray-400 hover:text-gray-500 transition-colors duration-200"
+                >
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                  </svg>
+                </button>
+                <h3 class="text-xl font-medium text-gray-900">{{ selectedTest.name }}</h3>
+              </div>
+            </div>
+            <TestReport :test="selectedTest" />
+          </div>
+
+                  <!-- Recomendaciones -->
         <div class="bg-white rounded-xl border p-6 mb-8">
           <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t('reports.recommendations.title') }}</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -160,13 +223,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Reportes de Tests -->
-        <div class="space-y-6">
-          <h2 class="text-xl font-semibold text-gray-900">{{ t('reports.test.title') }}</h2>
-          <div class="grid grid-cols-1 gap-6">
-            <TestReport v-for="test in reports" :key="test.id" :test="test" />
-          </div>
         </div>
       </div>
     </div>
@@ -174,7 +230,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useTranslation } from '@/composables/useTranslation'
 import TestReport from '@/Components/Reports/TestReport.vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
@@ -182,4 +238,19 @@ import { testReports } from '@/data/testReports'
 
 const { t } = useTranslation()
 const reports = ref(testReports)
+const searchQuery = ref('')
+const selectedTest = ref(null)
+
+// Filtrar tests
+const filteredTests = computed(() => {
+  return reports.value.filter(test => 
+    test.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    test.description.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    test.category.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+})
+
+const selectTest = (test) => {
+  selectedTest.value = test
+}
 </script> 

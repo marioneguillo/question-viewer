@@ -218,7 +218,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { 
   ClockIcon,
@@ -238,16 +238,24 @@ import Calendar from '@/Components/Dashboard/Calendar.vue'
 import ProductCodeRegistration from '@/Components/Dashboard/ProductCodeRegistration.vue'
 import ActiveTest from '@/Components/Dashboard/ActiveTest.vue'
 import Badges from '@/Components/Dashboard/Badges.vue'
+import { testReports } from '@/data/testReports'
 
 const { t } = useTranslation()
+const reports = ref(testReports)
+const isSidebarCollapsed = ref(false)
 
-// Definir las props
-const props = defineProps({
-  badges: {
-    type: Array,
-    required: true
+// Persistencia del estado del sidebar
+onMounted(() => {
+  const savedState = localStorage.getItem('sidebarCollapsed')
+  if (savedState !== null) {
+    isSidebarCollapsed.value = JSON.parse(savedState)
   }
 })
+
+const toggleSidebar = () => {
+  isSidebarCollapsed.value = !isSidebarCollapsed.value
+  localStorage.setItem('sidebarCollapsed', JSON.stringify(isSidebarCollapsed.value))
+}
 
 // Función para obtener el icono según la certificación
 const getCertificationIcon = (certification) => {

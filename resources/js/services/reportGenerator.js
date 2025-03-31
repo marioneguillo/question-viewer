@@ -1,9 +1,7 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import { useTranslation } from '@/composables/useTranslation'
 
-export function generateTestReport(test) {
-  const { t } = useTranslation()
+export function generateTestReport(test, t) {
   const doc = new jsPDF()
   
   // Configuración inicial
@@ -126,23 +124,21 @@ export function generateTestReport(test) {
   doc.save(`${test.name.toLowerCase().replace(/\s+/g, '-')}-report.pdf`)
 }
 
-function formatDate(date) {
-  if (!date) return ''
-  const dateObj = new Date(date)
-  if (isNaN(dateObj.getTime())) return ''
-  return dateObj.toLocaleString('es-ES', {
+function formatDate(dateString) {
+  return new Date(dateString).toLocaleDateString('es-ES', {
     year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
+    month: 'long',
+    day: 'numeric'
   })
 }
 
 function formatDuration(duration) {
-  if (!duration) return ''
-  if (duration.endsWith('m')) return duration
-  if (duration.endsWith(' min')) return duration.replace(' min', 'm')
-  return `${duration}m`
+  if (!duration) return '00:00'
+  try {
+    const [hours, minutes] = duration.split(':').map(Number)
+    if (isNaN(hours) || isNaN(minutes)) return '00:00'
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
+  } catch (error) {
+    return '00:00'
+  }
 } 

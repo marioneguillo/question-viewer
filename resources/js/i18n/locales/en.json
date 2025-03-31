@@ -13,6 +13,7 @@
   "navigation": {
     "dashboard": "Dashboard",
     "trainingLibrary": "Training Library",
+    "trainingLibrary2": "Training Library - List",
     "testing": "Testing",
     "reports": "Reports",
     "badges": "Badges"
@@ -186,6 +187,8 @@
     "test": {
       "title": "Test Reports",
       "download": "Download Report",
+      "searchPlaceholder": "Search tests...",
+      "search": "Search",
       "tabs": {
         "attempts": "Attempts",
         "objectives": "Objectives",
@@ -202,7 +205,9 @@
         "details": "Attempt Details",
         "questions": "Questions",
         "correct": "Correct",
-        "incorrect": "Incorrect"
+        "incorrect": "Incorrect",
+        "explanation": "Explanation",
+        "title": "Attempts"
       },
       "objectives": {
         "mastered": "Mastered",
@@ -211,7 +216,8 @@
         "description": "Description",
         "questions": "Questions",
         "correct": "Correct",
-        "incorrect": "Incorrect"
+        "incorrect": "Incorrect",
+        "title": "Objectives"
       },
       "calendar": {
         "title": "Activity Calendar",

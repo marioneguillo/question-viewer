@@ -3,6 +3,7 @@ export const testReports = [
     id: 1,
     name: 'AZ-900: Microsoft Azure Fundamentals',
     description: 'Fundamentos de Microsoft Azure',
+    category: 'Fundamentos',
     lastAttempt: {
       date: '2025-03-15T10:30:00',
       mode: 'certification',
@@ -514,6 +515,7 @@ export const testReports = [
     id: 2,
     name: 'AZ-204: Developing Solutions for Microsoft Azure',
     description: 'Desarrollo de soluciones para Microsoft Azure',
+    category: 'Desarrollo',
     lastAttempt: {
       date: '2025-03-14T09:15:00',
       mode: 'practice',
@@ -1094,5 +1096,149 @@ export const testReports = [
         ]
       }
     ]
+  },
+  {
+    id: 3,
+    name: 'AZ-104: Microsoft Azure Administrator',
+    description: 'Administración de Microsoft Azure',
+    category: 'Administración',
+    lastAttempt: {
+      date: '2025-03-13T11:20:00',
+      mode: 'practice',
+      score: 88,
+      passed: true,
+      duration: '55 min',
+      correctAnswers: 35,
+      incorrectAnswers: 5
+    },
+    attempts: [
+      {
+        id: 1,
+        date: '2025-03-13T11:20:00',
+        mode: 'practice',
+        score: 88,
+        passed: true,
+        duration: '55 min',
+        correctAnswers: 35,
+        incorrectAnswers: 5
+      }
+    ],
+    objectives: {
+      masteredCount: 4,
+      improvingCount: 2,
+      needsImprovementCount: 1,
+      list: [
+        {
+          id: 1,
+          name: 'Azure Virtual Machines',
+          description: 'Managing Azure Virtual Machines',
+          mastery: 90,
+          questions: []
+        },
+        {
+          id: 2,
+          name: 'Azure Storage',
+          description: 'Managing Azure Storage',
+          mastery: 85,
+          questions: []
+        }
+      ]
+    }
+  },
+  {
+    id: 4,
+    name: 'AZ-500: Microsoft Azure Security Technologies',
+    description: 'Tecnologías de seguridad de Microsoft Azure',
+    category: 'Seguridad',
+    lastAttempt: {
+      date: '2025-03-12T15:30:00',
+      mode: 'practice',
+      score: 92,
+      passed: true,
+      duration: '60 min',
+      correctAnswers: 37,
+      incorrectAnswers: 3
+    },
+    attempts: [
+      {
+        id: 1,
+        date: '2025-03-12T15:30:00',
+        mode: 'practice',
+        score: 92,
+        passed: true,
+        duration: '60 min',
+        correctAnswers: 37,
+        incorrectAnswers: 3
+      }
+    ],
+    objectives: {
+      masteredCount: 5,
+      improvingCount: 1,
+      needsImprovementCount: 0,
+      list: [
+        {
+          id: 1,
+          name: 'Azure Security Center',
+          description: 'Managing Azure Security Center',
+          mastery: 95,
+          questions: []
+        },
+        {
+          id: 2,
+          name: 'Azure Key Vault',
+          description: 'Managing Azure Key Vault',
+          mastery: 90,
+          questions: []
+        }
+      ]
+    }
+  },
+  {
+    id: 5,
+    name: 'AZ-303: Microsoft Azure Architect Technologies',
+    description: 'Tecnologías de arquitectura de Microsoft Azure',
+    category: 'Arquitectura',
+    lastAttempt: {
+      date: '2025-03-11T09:45:00',
+      mode: 'practice',
+      score: 78,
+      passed: false,
+      duration: '65 min',
+      correctAnswers: 31,
+      incorrectAnswers: 9
+    },
+    attempts: [
+      {
+        id: 1,
+        date: '2025-03-11T09:45:00',
+        mode: 'practice',
+        score: 78,
+        passed: false,
+        duration: '65 min',
+        correctAnswers: 31,
+        incorrectAnswers: 9
+      }
+    ],
+    objectives: {
+      masteredCount: 2,
+      improvingCount: 3,
+      needsImprovementCount: 2,
+      list: [
+        {
+          id: 1,
+          name: 'Azure Architecture',
+          description: 'Designing Azure Architecture',
+          mastery: 80,
+          questions: []
+        },
+        {
+          id: 2,
+          name: 'Azure Solutions',
+          description: 'Implementing Azure Solutions',
+          mastery: 75,
+          questions: []
+        }
+      ]
+    }
   }
 ] 

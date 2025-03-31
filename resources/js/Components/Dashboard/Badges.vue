@@ -11,10 +11,6 @@
               <TrophyIcon class="w-6 h-6 text-blue-600" />
             </div>
           </div>
-          <div class="mt-4 flex items-center text-sm">
-            <span class="text-green-600 font-medium">+{{ badgesEarned }}</span>
-            <span class="text-gray-600 ml-1">{{ t('badges.earned') }}</span>
-          </div>
         </div>
 
         <div class="bg-white rounded-xl border p-6">
