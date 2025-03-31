@@ -43,7 +43,13 @@
       "select": "Select",
       "searchTests": "Search Tests",
       "searchPlaceholder": "Search Tests...",
-      "noResults": "No results found"
+      "noResults": "No results found",
+      "noActiveTest": "No active test",
+      "noAttempts": "No attempts on this date",
+      "activationDate": "Activation Date",
+      "activationDescription": "This date activated your test. Start your learning journey.",
+      "expirationDate": "Expiration Date",
+      "expirationDescription": "Your test expires on this date. Ensure you complete it before."
     },
     "popularTests": {
       "title": "Popular Tests",

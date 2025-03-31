@@ -46,7 +46,7 @@
             <div v-if="showDropdown" 
                  class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
                  @click.self="showDropdown = false">
-              <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[80vh] flex flex-col">
+              <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[80vh] flex flex-col">
                 <div class="p-4 border-b border-gray-100">
                   <div class="flex items-center justify-between">
                     <h3 class="text-lg font-medium text-gray-900">{{ t('dashboard.activeTest.selectTest') }}</h3>
@@ -89,8 +89,8 @@
                             <div class="font-medium text-gray-900">{{ test.certification }}</div>
                             <div class="text-sm text-gray-500">{{ test.mode === 'practice' ? t('dashboard.activeTest.practiceMode') : t('dashboard.activeTest.certificationMode') }}</div>
                             <div class="text-xs text-gray-400 mt-1">
-                              {{ t('dashboard.activeTest.activationDate') }}: {{ formatDate(test.activationDate) }} - 
-                              {{ t('dashboard.activeTest.expirationDate') }}: {{ formatDate(test.expirationDate) }}
+                              <p>{{ t('dashboard.activeTest.activationDate') }}: {{ formatDate(test.activationDate) }}</p>
+                              <p>{{ t('dashboard.activeTest.expirationDate') }}: {{ formatDate(test.expirationDate) }}</p>
                             </div>
                           </div>
                         </div>
@@ -395,6 +395,22 @@ const tests = ref([
         time: '15:30',
         duration: '35 min',
         type: 'certification'
+      },
+      {
+        id: 4,
+        date: '2025-03-16',
+        score: 88,
+        time: '14:00',  
+        duration: '60 min',
+        type: 'practice'
+      },
+      {
+        id: 5,
+        date: '2025-03-16',
+        score: 50,
+        time: '13:00',  
+        duration: '60 min',
+        type: 'practice'
       }
     ],
     activationDate: '2025-03-02',
@@ -402,59 +418,37 @@ const tests = ref([
   }
 ])
 
+// Test activo (inicialmente el primero)
 const activeTest = ref({
-  id: 1,
-  certification: 'Microsoft Azure Fundamentals (AZ-900)',
-  category: 'Cloud',
-  mode: 'practice',
-  attempts: [
-    {
-      id: 1,
-      date: '2025-03-25',
-      score: 85,
-      time: '10:00',
-      duration: '45 min',
-      type: 'practice'
-    },
-    {
-      id: 2,
-      date: '2025-03-26',
-      score: 78,
-      time: '11:00',
-      duration: '42 min',
-      type: 'practice'
-    },
-    {
-      id: 3,
-      date: '2025-03-27',
-      score: 82,
-      time: '12:00',
-      duration: '40 min',
-      type: 'practice'
-    },
-    {
-      id: 4,
-      date: '2025-03-28',
-      score: 92,
-      time: '15:30',
-      duration: '35 min',
-      type: 'certification'
-    }
-  ],
-  activationDate: '2025-03-15',
-  expirationDate: '2025-04-15',
-  bestScore: 92,
-  totalAttempts: 4,
-  averageScore: 84,
-  averageTime: '40 min',
-  lastAttemptDate: '28 Mar 2025',
-  recentAttempts: [
-    { number: 1, date: '25 Mar 2025', time: '10:00', score: 85 },
-    { number: 2, date: '26 Mar 2025', time: '11:00', score: 78 },
-    { number: 3, date: '27 Mar 2025', time: '12:00', score: 82 },
-    { number: 4, date: '28 Mar 2025', time: '15:30', score: 92 }
-  ],
-  description: t('tests.AZ-900.description')
+  ...tests.value[0],
+  bestScore: tests.value[0].attempts.length > 0 
+    ? Math.max(...tests.value[0].attempts.map(a => a.score))
+    : 0,
+  totalAttempts: tests.value[0].attempts.length,
+  averageScore: tests.value[0].attempts.length > 0
+    ? Math.round(tests.value[0].attempts.reduce((acc, curr) => acc + curr.score, 0) / tests.value[0].attempts.length)
+    : 0,
+  averageTime: tests.value[0].attempts.length > 0
+    ? tests.value[0].attempts[0].duration
+    : '0 min',
+  lastAttemptDate: tests.value[0].attempts.length > 0
+    ? new Date(tests.value[0].attempts[tests.value[0].attempts.length - 1].date).toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      })
+    : '-',
+  recentAttempts: tests.value[0].attempts.map((attempt, index) => ({
+    number: index + 1,
+    date: new Date(attempt.date).toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    }),
+    time: attempt.time,
+    score: attempt.score
+  })),
+  description: t(`tests.${tests.value[0].certification.split('(')[1]?.replace(')', '') || tests.value[0].certification.replace(/\s+/g, '')}.description`)
 })
 
 const filteredTests = computed(() => {

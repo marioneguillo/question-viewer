@@ -18,7 +18,7 @@
     </div>
 
     <!-- Contenedor principal dividido -->
-    <div class="grid grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <!-- Lado izquierdo: Calendario -->
       <div>
         <!-- Filtros -->
@@ -51,41 +51,42 @@
         </div>
 
         <!-- Calendario -->
-        <div class="grid grid-cols-7 gap-1">
+        <div class="grid grid-cols-7 gap-0.5">
           <!-- Días del mes -->
-          <div v-for="day in calendarDays" :key="day.date || 'empty'" 
-               class="relative h-12">
-            <button 
-              v-if="day.date"
-              @click="selectDate(day)"
-              class="w-full h-full rounded-lg flex flex-col items-center justify-center transition-colors relative"
-              :class="{
-                'bg-blue-50': isSelectedDate(day.date),
-                'hover:bg-gray-50': !day.hasAttempts && !isSpecialDate(day.date),
-                'hover:bg-gray-50/50': day.hasAttempts || isSpecialDate(day.date),
-                'bg-green-100': isActivationDate(day.date),
-                'bg-red-100': isExpirationDate(day.date),
-                'ring-2 ring-blue-500': day.date === today
-              }"
-            >
-              <div class="relative flex flex-col items-center">
-                <span class="text-base font-medium">{{ day.dayNumber }}</span>
-                <div v-if="day.hasAttempts || isSpecialDate(day.date)" class="mt-1 flex gap-1">
-                  <div v-if="day.hasAttempts" class="w-2 h-2 rounded-full"
-                       :class="getAttemptTypeColor(day.attemptTypes)">
-                  </div>
-                  <div v-if="isActivationDate(day.date)" class="w-2 h-2 rounded-full bg-green-500"></div>
-                  <div v-if="isExpirationDate(day.date)" class="w-2 h-2 rounded-full bg-red-500"></div>
-                </div>
+          <div v-for="day in calendarDays" 
+               :key="day.date || `empty-${day.dayNumber}`"
+               class="relative aspect-square">
+            <button v-if="day.date"
+                    @click="selectDate(day)"
+                    class="w-full h-full flex flex-col items-center justify-center p-1 rounded-lg transition-colors"
+                    :class="[
+                      isSelectedDate(day.date) ? 'bg-blue-50' : 'hover:bg-gray-50',
+                      isActivationDate(day.date) ? 'bg-green-100' : '',
+                      isExpirationDate(day.date) ? 'bg-red-100' : '',
+                      day.date === today ? 'border-2 border-yellow-500' : ''
+                    ]">
+              <span class="text-sm font-medium"
+                    :class="[
+                      isSelectedDate(day.date) ? 'text-blue-600' : 'text-gray-900',
+                      isActivationDate(day.date) ? 'text-green-800 font-bold' : '',
+                      isExpirationDate(day.date) ? 'text-red-800 font-bold' : '',
+                      day.date === today ? 'text-yellow-700' : ''
+                    ]">
+                {{ day.dayNumber }}
+              </span>
+              <div v-if="day.hasAttempts" class="flex items-center gap-1 mt-1">
+                <div v-if="day.attemptTypes.includes('practice')" 
+                     class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                <div v-if="day.attemptTypes.includes('certification')" 
+                     class="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
               </div>
             </button>
-            <div v-else class="w-full h-full"></div>
           </div>
         </div>
       </div>
 
       <!-- Detalles del día seleccionado -->
-      <div class="border-l border-gray-200 pl-8">
+      <div class="lg:border-l lg:border-gray-200 lg:pl-8">
         <div class="h-full flex flex-col">
           <div class="flex-1 overflow-y-auto">
             <div v-if="!selectedDate" class="h-full flex items-center justify-center">
@@ -103,13 +104,13 @@
               <div class="space-y-6">
                 <!-- Detalles de activación -->
                 <div v-if="isActivationDate(selectedDate)" 
-                     class="bg-green-50 rounded-xl p-6 border border-green-100">
+                     class="bg-green-100 rounded-xl p-6 border-2 border-green-500">
                   <div class="flex items-center gap-4">
-                    <div class="p-3 bg-green-100 rounded-lg">
-                      <CheckBadgeIcon class="w-6 h-6 text-green-600" />
+                    <div class="p-3 bg-green-200 rounded-lg">
+                      <CheckBadgeIcon class="w-6 h-6 text-green-700" />
                     </div>
                     <div>
-                      <h3 class="text-base font-medium text-green-800">
+                      <h3 class="text-base font-bold text-green-800">
                         {{ t('dashboard.calendar.activationDate') }}
                       </h3>
                       <p class="text-sm text-green-700 mt-2">
@@ -121,13 +122,13 @@
 
                 <!-- Detalles de expiración -->
                 <div v-if="isExpirationDate(selectedDate)" 
-                     class="bg-red-50 rounded-xl p-6 border border-red-100">
+                     class="bg-red-100 rounded-xl p-6 border-2 border-red-500">
                   <div class="flex items-center gap-4">
-                    <div class="p-3 bg-red-100 rounded-lg">
-                      <ExclamationTriangleIcon class="w-6 h-6 text-red-600" />
+                    <div class="p-3 bg-red-200 rounded-lg">
+                      <ExclamationTriangleIcon class="w-6 h-6 text-red-700" />
                     </div>
                     <div>
-                      <h3 class="text-base font-medium text-red-800">
+                      <h3 class="text-base font-bold text-red-800">
                         {{ t('dashboard.calendar.expirationDate') }}
                       </h3>
                       <p class="text-sm text-red-700 mt-2">
