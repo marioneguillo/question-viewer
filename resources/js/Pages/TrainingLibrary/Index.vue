@@ -20,6 +20,13 @@
             </div>
           </div>
           <div class="flex items-center gap-2">
+            <button @click="toggleView"
+                    class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:shadow-sm">
+              <div class="relative">
+                <component :is="currentView === 'grid' ? TableCellsIcon : Squares2X2Icon" class="w-4 h-4" />
+              </div>
+              {{ currentView === 'grid' ? t('training.view.table') : t('training.view.grid') }}
+            </button>
             <button @click="showMobileFilters = true"
                     class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:shadow-sm">
               <div class="relative">
@@ -133,13 +140,64 @@
                 </div>
                 <span class="text-sm text-gray-500">{{ activeTests.length }} {{ t('training.tests') }}</span>
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              
+              <!-- Vista Grid -->
+              <div v-if="currentView === 'grid'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <TestCard
                   v-for="test in activeTests"
                   :key="test.id"
                   :test="test"
                   class="transform transition-all duration-200 hover:scale-[1.02] hover:shadow-md"
                 />
+              </div>
+
+              <!-- Vista Tabla -->
+              <div v-else class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <tbody class="bg-white divide-y divide-gray-200">
+                      <tr v-for="test in activeTests" :key="test.id" class="hover:bg-gray-50">
+                        <td class="px-6 py-4">
+                          <div class="flex items-center">
+                            <div class="flex-shrink-0 h-12 w-12">
+                              <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
+                                <BookOpenIcon class="h-7 w-7 text-blue-600" />
+                              </div>
+                            </div>
+                            <div class="ml-4 flex-1">
+                              <div class="text-base font-medium text-gray-900">{{ test.name }}</div>
+                              <div class="mt-1 flex items-center gap-3">
+                                <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full text-blue-800 border border-blue-200">
+                                  {{ t(`training.type.${test.type}`) }}
+                                </span>
+                                <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full" 
+                                      :class="{
+                                        'bg-green-100 text-green-800': test.difficulty === 'beginner',
+                                        'bg-yellow-100 text-yellow-800': test.difficulty === 'intermediate',
+                                        'bg-red-100 text-red-800': test.difficulty === 'advanced'
+                                      }">
+                                  {{ t(`training.difficulty.${test.difficulty}`) }}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center justify-end space-x-4">
+                            <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200" :title="t('training.table.start')">
+                              <PlayIcon class="h-5 w-5 mr-2" />
+                              {{ t('training.table.start') }}
+                            </button>
+                            <button @click="showTestDetails(test)" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200" :title="t('training.table.details')">
+                              <InformationCircleIcon class="h-5 w-5 mr-2" />
+                              {{ t('training.table.details') }}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
@@ -152,13 +210,64 @@
                 </div>
                 <span class="text-sm text-gray-500">{{ inactiveTests.length }} {{ t('training.tests') }}</span>
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              
+              <!-- Vista Grid -->
+              <div v-if="currentView === 'grid'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <TestCard
                   v-for="test in inactiveTests"
                   :key="test.id"
                   :test="test"
                   class="transform transition-all duration-200 hover:scale-[1.02] hover:shadow-md"
                 />
+              </div>
+
+              <!-- Vista Tabla -->
+              <div v-else class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <tbody class="bg-white divide-y divide-gray-200">
+                      <tr v-for="test in inactiveTests" :key="test.id" class="hover:bg-gray-50">
+                        <td class="px-6 py-4">
+                          <div class="flex items-center">
+                            <div class="flex-shrink-0 h-12 w-12">
+                              <div class="h-12 w-12 rounded-full bg-yellow-100 flex items-center justify-center">
+                                <BookOpenIcon class="h-7 w-7 text-yellow-600" />
+                              </div>
+                            </div>
+                            <div class="ml-4 flex-1">
+                              <div class="text-base font-medium text-gray-900">{{ test.name }}</div>
+                              <div class="mt-1 flex items-center gap-3">
+                                <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full text-yellow-800 border border-yellow-200">
+                                  {{ t(`training.type.${test.type}`) }}
+                                </span>
+                                <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full" 
+                                      :class="{
+                                        'bg-green-100 text-green-800': test.difficulty === 'beginner',
+                                        'bg-yellow-100 text-yellow-800': test.difficulty === 'intermediate',
+                                        'bg-red-100 text-red-800': test.difficulty === 'advanced'
+                                      }">
+                                  {{ t(`training.difficulty.${test.difficulty}`) }}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center justify-end space-x-4">
+                            <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200" :title="t('training.table.start')">
+                              <PlayIcon class="h-5 w-5 mr-2" />
+                              {{ t('training.table.start') }}
+                            </button>
+                            <button @click="showTestDetails(test)" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200" :title="t('training.table.details')">
+                              <InformationCircleIcon class="h-5 w-5 mr-2" />
+                              {{ t('training.table.details') }}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
@@ -171,13 +280,64 @@
                 </div>
                 <span class="text-sm text-gray-500">{{ lockedTests.length }} {{ t('training.tests') }}</span>
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              
+              <!-- Vista Grid -->
+              <div v-if="currentView === 'grid'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <TestCard
                   v-for="test in lockedTests"
                   :key="test.id"
                   :test="test"
                   class="transform transition-all duration-200 hover:scale-[1.02] hover:shadow-md"
                 />
+              </div>
+
+              <!-- Vista Tabla -->
+              <div v-else class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <tbody class="bg-white divide-y divide-gray-200">
+                      <tr v-for="test in lockedTests" :key="test.id" class="hover:bg-gray-50">
+                        <td class="px-6 py-4">
+                          <div class="flex items-center">
+                            <div class="flex-shrink-0 h-12 w-12">
+                              <div class="h-12 w-12 rounded-full bg-red-100 flex items-center justify-center">
+                                <BookOpenIcon class="h-7 w-7 text-red-600" />
+                              </div>
+                            </div>
+                            <div class="ml-4 flex-1">
+                              <div class="text-base font-medium text-gray-900">{{ test.name }}</div>
+                              <div class="mt-1 flex items-center gap-3">
+                                <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full text-red-800 border border-red-200">
+                                  {{ t(`training.type.${test.type}`) }}
+                                </span>
+                                <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full" 
+                                      :class="{
+                                        'bg-green-100 text-green-800': test.difficulty === 'beginner',
+                                        'bg-yellow-100 text-yellow-800': test.difficulty === 'intermediate',
+                                        'bg-red-100 text-red-800': test.difficulty === 'advanced'
+                                      }">
+                                  {{ t(`training.difficulty.${test.difficulty}`) }}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center justify-end space-x-4">
+                            <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200" :title="t('training.table.purchase')">
+                              <ShoppingCartIcon class="h-5 w-5 mr-2" />
+                              {{ t('training.table.purchase') }}
+                            </button>
+                            <button @click="showTestDetails(test)" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200" :title="t('training.table.details')">
+                              <InformationCircleIcon class="h-5 w-5 mr-2" />
+                              {{ t('training.table.details') }}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
@@ -210,6 +370,13 @@
         @close="showMobileFilters = $event"
         @filter="handleFilter"
       />
+
+      <!-- Modal de detalles del test -->
+      <TestDetailsModal
+        v-if="showDetailsModal"
+        :test="selectedTest"
+        @close="showDetailsModal = false"
+      />
     </div>
   </AppLayout>
 </template>
@@ -219,6 +386,7 @@ import { ref, computed } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import TestCard from '@/Components/TrainingLibrary/TestCard.vue'
 import TestFilters from '@/Components/TrainingLibrary/TestFilters.vue'
+import TestDetailsModal from '@/Components/TrainingLibrary/TestDetailsModal.vue'
 import {
   MagnifyingGlassIcon,
   CheckCircleIcon,
@@ -228,9 +396,11 @@ import {
   XMarkIcon,
   BookOpenIcon,
   AcademicCapIcon,
-  ArrowTrendingUpIcon,
-  ChartBarIcon,
-  ArrowPathIcon,
+  TableCellsIcon,
+  Squares2X2Icon,
+  StarIcon,
+  PlayIcon,
+  InformationCircleIcon,
   ShoppingCartIcon
 } from '@heroicons/vue/24/outline'
 import { useTranslation } from '@/composables/useTranslation'
@@ -243,13 +413,19 @@ const showMobileFilters = ref(false)
 // Búsqueda global
 const searchQuery = ref('')
 
+// Estado para la vista actual
+const currentView = ref('grid')
+
+// Estado para el modal de detalles
+const showDetailsModal = ref(false)
+const selectedTest = ref(null)
+
 // Datos de ejemplo - En producción, esto vendría de una API
 const tests = ref([
   // Tests Activos
   {
     id: 1,
     name: 'AZ-900: Microsoft Azure Fundamentals',
-    description: 'Prepárate para la certificación AZ-900 con este test de práctica completo.',
     type: 'practice',
     status: 'active',
     progress: 75,
@@ -275,7 +451,6 @@ const tests = ref([
   {
     id: 2,
     name: 'AZ-104: Azure Administrator Associate',
-    description: 'Test de práctica para la certificación AZ-104 de administración en Azure.',
     type: 'practice',
     status: 'active',
     progress: 45,
@@ -301,7 +476,6 @@ const tests = ref([
   {
     id: 3,
     name: 'AZ-204: Azure Developer Associate',
-    description: 'Test de práctica para la certificación AZ-204 de desarrollo en Azure.',
     type: 'practice',
     status: 'active',
     progress: 30,
@@ -328,7 +502,6 @@ const tests = ref([
   {
     id: 4,
     name: 'AZ-305: Azure Solutions Architect Expert',
-    description: 'Test de práctica para la certificación AZ-305 de arquitectura en Azure.',
     type: 'practice',
     status: 'inactive',
     progress: 0,
@@ -354,7 +527,6 @@ const tests = ref([
   {
     id: 5,
     name: 'AZ-400: Azure DevOps Engineer Expert',
-    description: 'Test de práctica para la certificación AZ-400 de DevOps en Azure.',
     type: 'practice',
     status: 'inactive',
     progress: 0,
@@ -381,7 +553,6 @@ const tests = ref([
   {
     id: 6,
     name: 'AWS Solutions Architect Associate',
-    description: 'Prepárate para la certificación AWS SAA con este test de práctica.',
     type: 'practice',
     status: 'locked',
     progress: 0,
@@ -408,7 +579,6 @@ const tests = ref([
   {
     id: 7,
     name: 'AWS Developer Associate',
-    description: 'Test de práctica para la certificación AWS DVA de desarrollo.',
     type: 'practice',
     status: 'locked',
     progress: 0,
@@ -435,7 +605,6 @@ const tests = ref([
   {
     id: 8,
     name: 'AWS SysOps Administrator Associate',
-    description: 'Test de práctica para la certificación AWS SOA de administración.',
     type: 'practice',
     status: 'locked',
     progress: 0,
@@ -463,7 +632,6 @@ const tests = ref([
   {
     id: 9,
     name: 'Azure Fundamentals eLearning',
-    description: 'Curso completo de fundamentos de Azure con ejercicios prácticos.',
     type: 'elearning',
     status: 'active',
     progress: 60,
@@ -489,7 +657,6 @@ const tests = ref([
   {
     id: 10,
     name: 'Azure Security Assessment',
-    description: 'Evaluación completa de conocimientos en seguridad de Azure.',
     type: 'assessment',
     status: 'inactive',
     progress: 0,
@@ -515,7 +682,6 @@ const tests = ref([
   {
     id: 11,
     name: 'Azure Developer CertKit',
-    description: 'Kit completo de preparación para la certificación AZ-204.',
     type: 'certkit',
     status: 'locked',
     progress: 0,
@@ -634,5 +800,16 @@ const removeDifficulty = (difficulty) => {
 
 const removeSearch = () => {
   filters.value.search = ''
+}
+
+// Función para alternar entre vistas
+const toggleView = () => {
+  currentView.value = currentView.value === 'grid' ? 'table' : 'grid'
+}
+
+// Función para mostrar los detalles del test
+const showTestDetails = (test) => {
+  selectedTest.value = test
+  showDetailsModal.value = true
 }
 </script> 

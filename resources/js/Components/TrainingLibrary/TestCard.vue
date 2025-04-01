@@ -1,278 +1,220 @@
 <template>
-  <div class="group perspective">
-    <div :class="[
-      'relative w-full h-full transition-all duration-500 transform-style-3d',
-      isFlipped ? 'rotate-y-180' : ''
-    ]">
-      <!-- Frente de la tarjeta -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full hover:shadow-md transition-all duration-200">
-        <!-- Encabezado con gradiente según el estado -->
-        <div :class="[
-          'p-4',
-          test.status === 'active' ? 'bg-gradient-to-r from-blue-50 to-blue-100' :
-          test.status === 'inactive' ? 'bg-gradient-to-r from-yellow-50 to-yellow-100' :
-          'bg-gradient-to-r from-red-50 to-red-100'
-        ]">
-          <div class="flex items-start justify-between">
-            <div class="flex-1 min-w-0">
-              <div class="flex items-start gap-3">
-                <div :class="[
-                  'p-2 rounded-lg',
-                  test.status === 'active' ? 'bg-blue-100' :
-                  test.status === 'inactive' ? 'bg-yellow-100' :
-                  'bg-red-100'
-                ]">
-                  <component
-                    :is="testIcon"
-                    :class="[
-                      'h-6 w-6',
-                      test.status === 'active' ? 'text-blue-600' :
-                      test.status === 'inactive' ? 'text-yellow-600' :
-                      'text-red-600'
-                    ]"
-                  />
-                </div>
-                <div class="min-w-0">
-                  <h3 class="text-lg font-semibold text-gray-900 break-words line-clamp-2 h-[3.5rem]">{{ test.name }}</h3>
-                </div>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 ml-4 flex-shrink-0">
-              <button
-                @click="toggleFavorite"
-                class="p-1.5 text-gray-400 hover:text-yellow-500 transition-colors rounded-full hover:bg-white/50"
-              >
-                <StarIcon
-                  :class="[
-                    'h-5 w-5',
-                    test.isFavorite ? 'fill-yellow-400 text-yellow-400' : ''
-                  ]"
-                />
-              </button>
-            </div>
-          </div>
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-200">
+    <!-- Encabezado de la tarjeta -->
+    <div class="p-6">
+      <div class="flex items-start justify-between">
+        <div class="flex-1">
+          <h3 :class="[
+            'text-lg font-semibold',
+            test.status === 'active' ? 'text-blue-900' :
+            test.status === 'inactive' ? 'text-yellow-900' :
+            'text-red-900'
+          ]">{{ test.name }}</h3>
+          <p class="mt-1 text-sm text-gray-500">{{ test.description }}</p>
         </div>
-
-        <!-- Contenido principal -->
-        <div class="flex-1 p-4">
-          <!-- Métricas de progreso -->
-          <div v-if="test.status !== 'locked'" class="grid grid-cols-2 gap-4 mb-4">
-            <div class="bg-gray-50 rounded-lg p-3">
-              <div class="flex items-center gap-2 mb-1">
-                <ChartBarIcon class="h-4 w-4 text-green-600" />
-                <span class="text-sm font-medium text-gray-700">{{ t('training.lastScore') }}</span>
-              </div>
-              <div class="text-2xl font-bold text-gray-900">{{ test.lastScore || '0' }}%</div>
-            </div>
-            <div class="bg-gray-50 rounded-lg p-3">
-              <div class="flex items-center gap-2 mb-1">
-                <AcademicCapIcon class="h-4 w-4 text-blue-600" />
-                <span class="text-sm font-medium text-gray-700">{{ t('training.averageScore') }}</span>
-              </div>
-              <div class="text-2xl font-bold text-gray-900">{{ test.averageScore || '0' }}%</div>
-            </div>
-          </div>
-
-          <!-- Nivel y tipo -->
-          <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center gap-2">
-              <div class="px-2.5 py-1 rounded-full text-xs font-medium"
-                   :class="[
-                     test.difficulty === 'beginner' ? 'bg-green-100 text-green-700' :
-                     test.difficulty === 'intermediate' ? 'bg-blue-100 text-blue-700' :
-                     'bg-purple-100 text-purple-700'
-                   ]">
-                {{ t(`training.difficulty.${test.difficulty}`) }}
-              </div>
-            </div>
-            <div class="flex items-center gap-2">
-              <div class="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                {{ t(`training.type.${test.type}`) }}
-              </div>
-            </div>
-          </div>
-
-          <!-- Badge -->
-          <div v-if="test.hasBadge" class="flex items-center gap-2 bg-blue-50 rounded-lg p-3">
-            <CheckBadgeIcon class="h-5 w-5 text-blue-600" />
-            <span class="text-sm font-medium text-blue-700">{{ t('training.includesCertification') }}</span>
-          </div>
-        </div>
-
-        <!-- Acciones (siempre al final) -->
-        <div class="p-4 border-t border-gray-100">
-          <div class="flex gap-2">
-            <template v-if="test.status === 'active'">
-              <button
-                @click="startTest"
-                class="flex-1 inline-flex justify-center items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors"
-              >
-                {{ t('training.start') }}
-              </button>
-              <button
-                @click="isFlipped = true"
-                class="inline-flex justify-center items-center px-4 py-2.5 border border-gray-200 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors"
-              >
-                <InformationCircleIcon class="h-5 w-5" />
-              </button>
-            </template>
-            <template v-else-if="test.status === 'inactive'">
-              <button
-                @click="activateTest"
-                class="flex-1 inline-flex justify-center items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-yellow-600 hover:bg-yellow-700 transition-colors"
-              >
-                {{ t('training.activate') }}
-              </button>
-              <button
-                @click="tryDemo"
-                class="flex-1 inline-flex justify-center items-center px-4 py-2.5 border border-gray-200 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors"
-              >
-                {{ t('training.tryDemo') }}
-              </button>
-              <button
-                @click="isFlipped = true"
-                class="inline-flex justify-center items-center px-4 py-2.5 border border-gray-200 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors"
-              >
-                <InformationCircleIcon class="h-5 w-5" />
-              </button>
-            </template>
-            <template v-else>
-              <button
-                @click="activateTest"
-                class="flex-1 inline-flex justify-center items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 transition-colors"
-              >
-                {{ t('training.activate') }}
-              </button>
-              <button
-                @click="tryDemo"
-                class="flex-1 inline-flex justify-center items-center px-4 py-2.5 border border-gray-200 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors"
-              >
-                {{ t('training.tryDemo') }}
-              </button>
-              <button
-                @click="isFlipped = true"
-                class="inline-flex justify-center items-center px-4 py-2.5 border border-gray-200 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors"
-              >
-                <InformationCircleIcon class="h-5 w-5" />
-              </button>
-            </template>
-          </div>
-        </div>
-      </div>
-
-      <!-- Reverso de la tarjeta -->
-      <div class="absolute inset-0 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full rotate-y-180 backface-hidden">
-        <div class="p-4 border-b border-gray-200">
-          <div class="flex items-center justify-between">
-            <h3 class="text-lg font-semibold text-gray-900">{{ t('training.details') }}</h3>
-            <button
-              @click="isFlipped = false"
-              class="p-1.5 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
-            >
-              <XMarkIcon class="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-
-        <div class="flex-1 p-4 overflow-y-auto">
-          <div class="space-y-4">
-            <!-- Detalles del test -->
-            <div class="absolute inset-0 w-full h-full bg-white rounded-xl shadow-lg p-6 flex flex-col backface-hidden">
-              <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold text-gray-900">{{ t('training.details') }}</h3>
-                <button @click="isFlipped = false" class="text-gray-400 hover:text-gray-600">
-                  <XMarkIcon class="h-5 w-5" />
-                </button>
-              </div>
-
-              <!-- Información principal -->
-              <div class="space-y-6 flex-1 overflow-y-auto">
-                <!-- Job Role y Tecnología -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div class="bg-blue-50 rounded-lg p-4">
-                    <div class="flex items-center mb-2">
-                      <UserIcon class="h-5 w-5 text-blue-500 mr-2" />
-                      <h4 class="text-sm font-medium text-blue-700">{{ t('training.jobRole') }}</h4>
-                    </div>
-                    <p class="text-sm text-blue-900">{{ test.role }}</p>
-                  </div>
-                  <div class="bg-purple-50 rounded-lg p-4">
-                    <div class="flex items-center mb-2">
-                      <CodeBracketIcon class="h-5 w-5 text-purple-500 mr-2" />
-                      <h4 class="text-sm font-medium text-purple-700">{{ t('training.technologies') }}</h4>
-                    </div>
-                    <p class="text-sm text-purple-900">{{ test.technologies }}</p>
-                  </div>
-                </div>
-
-                <!-- Fechas importantes -->
-                <div class="bg-gray-50 rounded-lg p-4">
-                  <h4 class="text-sm font-medium text-gray-700 mb-3">{{ t('training.importantDates') }}</h4>
-                  <div class="space-y-3">
-                    <div class="flex items-center justify-between">
-                      <span class="text-sm text-gray-600">{{ t('training.activationDate') }}</span>
-                      <span class="text-sm font-medium text-gray-900">{{ formatDate(test.activationDate) }}</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                      <span class="text-sm text-gray-600">{{ t('training.expirationDate') }}</span>
-                      <span class="text-sm font-medium text-gray-900">{{ formatDate(test.expirationDate) }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- UUID -->
-                <div class="bg-gray-50 rounded-lg p-4">
-                  <div class="flex items-center mb-2">
-                    <FingerPrintIcon class="h-5 w-5 text-gray-500 mr-2" />
-                    <h4 class="text-sm font-medium text-gray-700">Key</h4>
-                  </div>
-                  <p class="font-mono text-sm text-gray-900 break-all">{{ test.uuid }}</p>
-                </div>            
-              </div>
-
-              <!-- Botón de volver -->
-              <div class="mt-6 pt-4 border-t border-gray-200">
-                <button
-                  @click="isFlipped = false"
-                  class="w-full inline-flex justify-center items-center px-4 py-2.5 border border-gray-200 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors"
-                >
-                  {{ t('training.backToFront') }}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="p-4 border-t border-gray-200">
-          <button
-            @click="isFlipped = false"
-            class="w-full inline-flex justify-center items-center px-4 py-2.5 border border-gray-200 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors"
-          >
-            {{ t('training.backToFront') }}
+        <div class="flex items-center space-x-2">
+          <button @click="toggleFavorite" class="text-gray-400 hover:text-yellow-500 transition-colors duration-200">
+            <StarIcon :class="['h-5 w-5', { 'fill-current text-yellow-500': test.isFavorite }]" />
+          </button>
+          <button @click="showDetails" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+            <EllipsisVerticalIcon class="h-5 w-5" />
           </button>
         </div>
       </div>
+
+      <!-- Badges de estado y tipo -->
+      <div class="mt-4 flex items-center gap-2">
+        <span class="px-2 py-1 text-xs font-medium rounded-full" 
+              :class="{
+                'bg-green-100 text-green-800': test.status === 'active',
+                'bg-yellow-100 text-yellow-800': test.status === 'inactive',
+                'bg-red-100 text-red-800': test.status === 'locked'
+              }">
+          {{ t(`training.status.${test.status}`) }}
+        </span>
+        <span class="px-2 py-1 text-xs font-medium rounded-full" 
+              :class="{
+                'bg-blue-100 text-blue-800': test.type === 'practice',
+                'bg-purple-100 text-purple-800': test.type === 'elearning',
+                'bg-orange-100 text-orange-800': test.type === 'assessment',
+                'bg-indigo-100 text-indigo-800': test.type === 'certkit'
+              }">
+          {{ t(`training.type.${test.type}`) }}
+        </span>
+      </div>
+
+      <!-- Barra de progreso para tests activos -->
+      <div v-if="test.status === 'active'" class="mt-4">
+        
+        <!-- Puntuaciones -->
+        <div class="mt-4 grid grid-cols-2 gap-4">
+          <div class="bg-gray-50 rounded-lg p-3">
+            <div class="flex items-center gap-2 mb-1">
+              <ChartBarIcon class="h-4 w-4 text-green-600" />
+              <span class="text-sm font-medium text-gray-700">{{ t('training.lastScore') }}</span>
+            </div>
+            <div class="text-2xl font-bold text-gray-900">{{ test.lastScore || '0' }}%</div>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-3">
+            <div class="flex items-center gap-2 mb-1">
+              <AcademicCapIcon class="h-4 w-4 text-blue-600" />
+              <span class="text-sm font-medium text-gray-700">{{ t('training.averageScore') }}</span>
+            </div>
+            <div class="text-2xl font-bold text-gray-900">{{ test.averageScore || '0' }}%</div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- Pie de la tarjeta -->
+    <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
+      <div class="flex items-center justify-between">
+        <!-- Botón principal según el estado -->
+        <button v-if="test.status === 'active'"
+                class="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+          <PlayIcon class="h-5 w-5 mr-2" />
+          {{ t('training.start') }}
+        </button>
+        <button v-if="test.status === 'inactive'"
+                class="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors duration-200">
+          <ClockIcon class="h-5 w-5 mr-2" />
+          {{ t('training.activate') }}
+        </button>
+        <button v-if="test.status === 'locked'"
+                class="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+          <ShoppingCartIcon class="h-5 w-5 mr-2" />
+          {{ t('training.purchase') }}
+        </button>
+
+        <!-- Botón de detalles siempre presente -->
+        <button @click="showDetails" 
+                class="inline-flex items-center px-4 py-2.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+          <InformationCircleIcon class="h-5 w-5 mr-2" />
+          {{ t('training.details.description') }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal de detalles -->
+    <TransitionRoot appear :show="showDetailsModal" as="template">
+      <Dialog as="div" @close="closeDetails" class="relative z-50">
+        <TransitionChild
+          as="template"
+          enter="duration-300 ease-out"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="duration-200 ease-in"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div class="fixed inset-0 bg-black bg-opacity-25" />
+        </TransitionChild>
+
+        <div class="fixed inset-0 overflow-y-auto">
+          <div class="flex min-h-full items-center justify-center p-4 text-center">
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <DialogPanel class="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">
+                  {{ test.name }}
+                </DialogTitle>
+
+                <div class="mt-4 space-y-4">
+                  <!-- Información básica -->
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <div class="text-sm font-medium text-gray-500">{{ t('training.details.type') }}</div>
+                      <div class="mt-1 text-sm text-gray-900">{{ t(`training.type.${test.type}`) }}</div>
+                    </div>
+                    <div>
+                      <div class="text-sm font-medium text-gray-500">{{ t('training.details.difficulty') }}</div>
+                      <div class="mt-1 text-sm text-gray-900">{{ t(`training.difficulty.${test.difficulty}`) }}</div>
+                    </div>
+                    <div>
+                      <div class="text-sm font-medium text-gray-500">{{ t('training.details.role') }}</div>
+                      <div class="mt-1 text-sm text-gray-900">{{ test.role }}</div>
+                    </div>
+      
+                  </div>
+
+                  <!-- Fechas de activación y expiración -->
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <div class="text-sm font-medium text-gray-500">{{ t('training.activationDate') }}</div>
+                      <div class="mt-1 text-sm text-gray-900">{{ formatDate(test.activationDate) }}</div>
+                    </div>
+                    <div>
+                      <div class="text-sm font-medium text-gray-500">{{ t('training.expirationDate') }}</div>
+                      <div class="mt-1 text-sm text-gray-900">{{ formatDate(test.expirationDate) }}</div>
+                    </div>
+                  </div>
+
+                  <!-- Competencias y tecnologías -->
+                  <div>
+                    <div class="text-sm font-medium text-gray-500">{{ t('training.competencies') }}</div>
+                    <div class="mt-1 text-sm text-gray-900">{{ test.competencies }}</div>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-gray-500">{{ t('training.technologies') }}</div>
+                    <div class="mt-1 text-sm text-gray-900">{{ test.technologies }}</div>
+                  </div>
+
+                  <!-- Badges y certificaciones -->
+                  <div v-if="test.hasBadge" class="flex items-center space-x-2">
+                    <CheckBadgeIcon class="h-5 w-5 text-blue-500" />
+                    <span class="text-sm text-gray-900">{{ t('training.hasBadge') }}</span>
+                  </div>
+
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                  <button
+                    type="button"
+                    class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    @click="closeDetails"
+                  >
+                    {{ t('training.close') }}
+                  </button>
+                </div>
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import {
-  BookOpenIcon,
-  AcademicCapIcon,
-  DocumentCheckIcon,
-  DocumentTextIcon,
-  StarIcon,
-  CheckBadgeIcon,
-  ChartBarIcon,
-  XMarkIcon,
-  InformationCircleIcon,
-  UserIcon,
-  CodeBracketIcon,
-  FingerPrintIcon
-} from '@heroicons/vue/24/outline'
+import { ref } from 'vue'
 import { useTranslation } from '@/composables/useTranslation'
+import {
+  StarIcon,
+  PlayIcon,
+  ShoppingCartIcon,
+  ClockIcon,
+  EllipsisVerticalIcon,
+  CheckBadgeIcon,
+  InformationCircleIcon,
+  ChartBarIcon,
+  AcademicCapIcon
+} from '@heroicons/vue/24/outline'
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  TransitionChild,
+  TransitionRoot,
+} from '@headlessui/vue'
+
+const { t } = useTranslation()
 
 const props = defineProps({
   test: {
@@ -281,63 +223,24 @@ const props = defineProps({
   }
 })
 
-const { t, locale } = useTranslation()
-const isFlipped = ref(false)
+const emit = defineEmits(['toggle-favorite'])
 
-const testIcon = computed(() => {
-  switch (props.test.type) {
-    case 'practice':
-      return DocumentTextIcon
-    case 'elearning':
-      return BookOpenIcon
-    case 'assessment':
-      return DocumentCheckIcon
-    case 'certkit':
-      return AcademicCapIcon
-    default:
-      return DocumentTextIcon
-  }
-})
+const showDetailsModal = ref(false)
 
 const toggleFavorite = () => {
-  props.test.isFavorite = !props.test.isFavorite
+  emit('toggle-favorite', props.test.id)
 }
 
-const startTest = () => {
-  console.log('Comenzando test:', props.test.id)
+const showDetails = () => {
+  showDetailsModal.value = true
 }
 
-const activateTest = () => {
-  console.log('Activando test:', props.test.id)
+const closeDetails = () => {
+  showDetailsModal.value = false
 }
 
-const tryDemo = () => {
-  console.log('Probando demo:', props.test.id)
+const formatDate = (dateString) => {
+  if (!dateString) return '-'
+  return new Date(dateString).toLocaleDateString()
 }
-
-const formatDate = (date) => {
-  return new Date(date).toLocaleDateString(locale.value, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-}
-</script>
-
-<style scoped>
-.perspective {
-  perspective: 1000px;
-}
-
-.transform-style-3d {
-  transform-style: preserve-3d;
-}
-
-.backface-hidden {
-  backface-visibility: hidden;
-}
-
-.rotate-y-180 {
-  transform: rotateY(180deg);
-}
-</style> 
+</script> 

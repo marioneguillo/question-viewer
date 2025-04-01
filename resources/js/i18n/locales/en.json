@@ -306,6 +306,16 @@
       "title": "No results found",
       "description": "No tests match the selected filters."
     },
+    "table": {
+      "details": "Details",
+      "purchase": "Purchase",
+      "start": "Start Test"
+    },
+    "view": {
+      "grid": "Grid",
+      "list": "List",
+      "table": "List"
+    },
     "progress": "Progress",
     "questions": "Questions",
     "level": "Level",
@@ -359,7 +369,26 @@
       "expirationDate": "Expiration Date",
       "jobRole": "Job Role",
       "technology": "Technology",
-      "details": "Details"
+      "hasBadge": "Has Badge",
+      "hasCertification": "Has Certification",
+      "purchase": "Purchase",
+      "close": "Close",
+      "details": {
+        "description": "Details",
+        "type": "Type",
+        "difficulty": "Difficulty",
+        "status": "Status",
+        "lastScore": "Last Score",
+        "averageScore": "Average",
+        "attempts": "Attempts",
+        "viewDetails": "View Details",
+        "viewTest": "View Test",
+        "backToFront": "Back to Front",
+        "competencies": "Competencies",
+        "technologies": "Technologies",
+        "role": "Roles",
+        "lastAttempt": "Last Attempt"
+      }
     },
     "badges": {
       "title": "Badges",
