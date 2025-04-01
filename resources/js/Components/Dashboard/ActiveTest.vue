@@ -181,16 +181,21 @@
               </div>
 
               <!-- Historial de intentos colapsable -->
-              <div class="border border-gray-200 rounded-xl overflow-hidden">
+              <div class="bg-white rounded-xl border border-gray-100 shadow-sm">
                 <button @click="showHistory = !showHistory"
-                        class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
-                  <div class="flex items-center gap-2">
-                    <h4 class="text-sm font-medium text-gray-900">{{ t('dashboard.activeTest.history') }}</h4>
-                    <span class="text-xs text-gray-500">({{ activeTest.totalAttempts }} {{ t('dashboard.activeTest.attempts') }})</span>
+                        class="w-full flex items-center justify-between p-6 hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center gap-3">
+                    <div class="p-2 bg-gray-50 rounded-lg">
+                      <ChartBarIcon class="w-5 h-5 text-gray-600" />
+                    </div>
+                    <div>
+                      <h4 class="text-base font-medium text-gray-900">{{ t('dashboard.activeTest.history') }}</h4>
+                      <p class="text-sm text-gray-500 mt-0.5">{{ t('dashboard.activeTest.attemptsCount', { count: activeTest.totalAttempts }) }}</p>
+                    </div>
                   </div>
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-3">
                     <span class="text-sm text-gray-500">{{ t('dashboard.activeTest.viewStatistics') }}</span>
-                    <ChevronDownIcon class="w-5 h-5 text-gray-500 transition-transform duration-200"
+                    <ChevronDownIcon class="w-5 h-5 text-gray-400 transition-transform duration-200"
                                    :class="{ 'rotate-180': showHistory }" />
                   </div>
                 </button>
@@ -198,18 +203,37 @@
                 <div v-show="showHistory" class="divide-y divide-gray-100">
                   <div v-for="(attempt, index) in activeTest.recentAttempts" :key="index"
                        class="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
-                    <div class="flex items-center gap-3">
-                      <div class="text-sm font-medium text-gray-900">{{ t('dashboard.activeTest.attemptNumber', { number: attempt.number }) }}</div>
-                      <div class="text-sm text-gray-500">{{ attempt.date }}</div>
-                    </div>
                     <div class="flex items-center gap-4">
+                      <div class="flex items-center gap-3">
+                        <div class="w-7 h-7 rounded-full flex items-center justify-center text-sm"
+                             :class="attempt.score >= 70 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'">
+                          {{ attempt.number }}
+                        </div>
+                        <div>
+                          <div class="flex items-center gap-2">
+                            <span class="text-sm font-medium text-gray-900">{{ attempt.date }}</span>
+                            <span class="text-xs px-2 py-0.5 rounded-full"
+                                  :class="attempt.type === 'practice' ? 'bg-green-50 text-green-600' : 'bg-yellow-50 text-yellow-600'">
+                              {{ attempt.type === 'practice' ? t('dashboard.activeTest.practiceMode') : t('dashboard.activeTest.certificationMode') }}
+                            </span>
+                          </div>
+                          <div class="text-xs text-gray-500">{{ attempt.time }}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-6">
                       <div class="flex items-center gap-2">
                         <ClockIcon class="w-4 h-4 text-gray-400" />
-                        <span class="text-sm text-gray-600">{{ t('dashboard.activeTest.time') }}: {{ attempt.time }}</span>
+                        <span class="text-sm text-gray-600">{{ attempt.duration }}</span>
                       </div>
-                      <div class="text-sm font-medium" 
-                           :class="attempt.score >= 70 ? 'text-green-600' : 'text-gray-900'">
-                        {{ attempt.score }}%
+                      <div class="flex items-center gap-2">
+                        <div class="text-sm font-medium" 
+                             :class="attempt.score >= 70 ? 'text-green-600' : 'text-red-600'">
+                          {{ attempt.score }}%
+                        </div>
+                        <div class="text-xs text-gray-500">
+                          ({{ attempt.score >= 70 ? '+' : '-' }}{{ Math.abs(attempt.score - 70) }}%)
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -468,7 +492,9 @@ const activeTest = ref({
       year: 'numeric'
     }),
     time: attempt.time,
-    score: attempt.score
+    score: attempt.score,
+    duration: attempt.duration,
+    type: attempt.type
   })),
   description: t(`tests.${tests.value[0].certification.split('(')[1]?.replace(')', '') || tests.value[0].certification.replace(/\s+/g, '')}.description`)
 })
@@ -529,7 +555,9 @@ const selectTest = (test) => {
         year: 'numeric'
       }),
       time: attempt.time,
-      score: attempt.score
+      score: attempt.score,
+      duration: attempt.duration,
+      type: attempt.type
     })),
     description: t(`tests.${test.certification.split('(')[1]?.replace(')', '') || test.certification.replace(/\s+/g, '')}.description`)
   }
